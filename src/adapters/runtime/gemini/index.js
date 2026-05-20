@@ -97,7 +97,7 @@ function createGeminiRuntimeAdapter(config, { toolHost = null } = {}) {
 
       // Build messages: system persona + shared history + current user message (with optional images)
       const instructions = loadWechatInstructions(config);
-      const geminiAddendum = '默认用"我"指代自己，不要主动用第三人称自称自己的名字（例如避免说"晨曦觉得""晨曦在这里"）；如果白昼明确要求某种特定的说话方式或角色扮演，可以配合调整。工具调用完成后，直接用中文自然地回复白昼，不要向她描述你调用了什么工具或做了什么操作；任何情况下都不要用英文回复。';
+      const geminiAddendum = '默认用"我"指代自己，不要主动用第三人称自称自己的名字（例如避免说"晨曦觉得""晨曦在这里"）；如果白昼明确要求某种特定的说话方式或角色扮演，可以配合调整。工具调用完成后，直接用中文自然地回复白昼，不要向她描述你调用了什么工具或做了什么操作。';
       const localTime = new Intl.DateTimeFormat("zh-CN", {
         timeZone: "Asia/Shanghai",
         year: "numeric", month: "2-digit", day: "2-digit",

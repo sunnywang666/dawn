@@ -69,6 +69,27 @@ function listProjectToolNames() {
 
 const PROJECT_TOOLS = [
   {
+    name: "cyberboss_web_search",
+    description: "Search the web using Jina AI. Use this when the user asks you to look something up, or when you need current information you don't know.",
+    shortHint: "Search the web for a query.",
+    topics: ["search"],
+    inputSchema: {
+      type: "object",
+      required: ["query"],
+      properties: {
+        query: { type: "string", description: "Search query in the most relevant language." },
+      },
+      additionalProperties: false,
+    },
+    async handler({ services, args }) {
+      const result = await services.search.search(args);
+      return {
+        text: `Search completed.`,
+        data: { result },
+      };
+    },
+  },
+  {
     name: "cyberboss_diary_append",
     description: "Append a diary entry into Cyberboss local diary storage.",
     shortHint: "Append a diary entry with direct text content.",
