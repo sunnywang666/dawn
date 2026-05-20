@@ -1,19 +1,27 @@
 const JINA_SEARCH_BASE = "https://s.jina.ai/";
-const SEARCH_TIMEOUT_MS = 15_000;
+const SEARCH_TIMEOUT_MS = 30_000;
 const MAX_RESULT_CHARS = 3_000;
 
 class SearchService {
+  constructor({ apiKey = "" } = {}) {
+    this.apiKey = String(apiKey || "").trim();
+  }
+
   async search({ query = "" } = {}) {
     const q = String(query).trim();
     if (!q) {
       throw new Error("search query cannot be empty");
     }
     const url = JINA_SEARCH_BASE + encodeURIComponent(q);
+    const headers = { Accept: "text/plain" };
+    if (this.apiKey) {
+      headers["Authorization"] = `Bearer ${this.apiKey}`;
+    }
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), SEARCH_TIMEOUT_MS);
     try {
       const res = await fetch(url, {
-        headers: { Accept: "text/plain" },
+        headers,
         signal: controller.signal,
       });
       if (!res.ok) {

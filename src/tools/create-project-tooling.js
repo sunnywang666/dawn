@@ -32,7 +32,7 @@ function createProjectTooling(config, options = {}) {
     channelFile,
     sticker: new StickerService({ config, channelAdapter, sessionStore, channelFileService: channelFile }),
     timeline: new TimelineService({ config, timelineIntegration, sessionStore }),
-    search: new SearchService(),
+    search: new SearchService({ apiKey: config.jinaApiKey }),
     whereabouts: new WhereaboutsService({
       config: {
         storeFile: config.locationStoreFile,

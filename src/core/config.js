@@ -70,6 +70,7 @@ function readConfig() {
     geminiApiKey: readTextEnv("CYBERBOSS_GEMINI_API_KEY"),
     geminiModel: readTextEnv("CYBERBOSS_GEMINI_MODEL"),
     geminiApiBaseUrl: readTextEnv("CYBERBOSS_GEMINI_API_BASE_URL"),
+    jinaApiKey: readTextEnv("CYBERBOSS_JINA_API_KEY"),
     visionMode: readTextEnv("CYBERBOSS_VISION_MODE") || "auto",
     visionProvider: readTextEnv("CYBERBOSS_VISION_PROVIDER") || "openai-compatible",
     visionApiBaseUrl: readTextEnv("CYBERBOSS_VISION_API_BASE_URL"),
