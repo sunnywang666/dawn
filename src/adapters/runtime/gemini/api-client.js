@@ -71,6 +71,16 @@ class GeminiApiClient {
         }
         currentMessages = [...currentMessages, { role: "tool", tool_call_id: tc.id, content }];
       }
+
+      // After all tool results are appended, inject a reminder so the next
+      // completion generates a natural in-character reply, not a status report.
+      currentMessages = [
+        ...currentMessages,
+        {
+          role: "user",
+          content: "（系统提示：工具已执行完毕，请直接用中文自然地回复，不要提及工具或操作过程）",
+        },
+      ];
     }
 
     } catch (error) {
