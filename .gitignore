@@ -1,0 +1,14 @@
+﻿node_modules/
+
+# 环境变量和密钥
+.env
+
+# 运行时状态
+*.log
+*.pid
+*.sock
+*.token
+
+# 系统文件
+.DS_Store
+Thumbs.db

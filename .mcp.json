@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "cyberboss_tools": {
+      "command": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "D:\\GitHub\\WenXiaoWendy\\cyberboss\\bin\\cyberboss.js",
+        "tool-mcp-server",
+        "--runtime-id",
+        "claudecode",
+        "--workspace-root",
+        "D:\\GitHub\\WenXiaoWendy\\cyberboss"
+      ]
+    }
+  }
+}
