@@ -1,8 +1,8 @@
-# Commands
+﻿# Commands
 
 ## Design Principles
 
-`Cyberboss` does not hard-code one shared string format across terminal commands, WeChat commands, and different agent runtimes.
+`Dawn` does not hard-code one shared string format across terminal commands, WeChat commands, and different agent runtimes.
 
 It defines stable internal actions first, then lets each channel expose its own entrypoints:
 
@@ -73,20 +73,20 @@ Models no longer use local capability CLI commands for diary, reminders, timelin
 
 Those capabilities are exposed as project-native structured tools:
 
-- `cyberboss_channel_send_file`
-- `cyberboss_diary_append`
-- `cyberboss_reminder_create`
-- `cyberboss_system_send`
-- `cyberboss_timeline_write`
-- `cyberboss_timeline_build`
-- `cyberboss_timeline_serve`
-- `cyberboss_timeline_dev`
-- `cyberboss_timeline_screenshot`
+- `dawn_channel_send_file`
+- `dawn_diary_append`
+- `dawn_reminder_create`
+- `dawn_system_send`
+- `dawn_timeline_write`
+- `dawn_timeline_build`
+- `dawn_timeline_serve`
+- `dawn_timeline_dev`
+- `dawn_timeline_screenshot`
 
 Notes:
-- These tools are bound to the Cyberboss project and routed through the repo's internal tool host.
-- Claude Code loads them through workspace-local `.mcp.json` injected by Cyberboss and passed to Claude at startup with `--mcp-config`.
-- Codex loads them through the runtime-side Cyberboss MCP bridge configured at spawn time.
+- These tools are bound to the Dawn project and routed through the repo's internal tool host.
+- Claude Code loads them through workspace-local `.mcp.json` injected by Dawn and passed to Claude at startup with `--mcp-config`.
+- Codex loads them through the runtime-side Dawn MCP bridge configured at spawn time.
 - The public human terminal surface stays intentionally small: lifecycle commands plus shared bridge scripts.
 
 ## Current WeChat Commands

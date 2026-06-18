@@ -115,16 +115,16 @@ function canonicalizeCommandTokens(tokens) {
   if (executable === "node" || executable === "node.exe") {
     const binPath = normalizeString(normalized[1]);
     const binBase = baseName(binPath);
-    if ((binPath === "./bin/cyberboss.js" || /\/bin\/cyberboss\.js$/u.test(binPath)) && normalized.length >= 4) {
-      return ["cyberboss", normalizeString(normalized[2]), normalizeString(normalized[3])].filter(Boolean);
+    if ((binPath === "./bin/exclusive-dawn.js" || /\/bin\/exclusive-dawn\.js$/u.test(binPath)) && normalized.length >= 4) {
+      return ["exclusive-dawn", normalizeString(normalized[2]), normalizeString(normalized[3])].filter(Boolean);
     }
     if (binBase) {
       return [executable, binBase];
     }
   }
 
-  if (executable === "cyberboss" || executable === "cyberboss.js") {
-    return ["cyberboss", normalizeString(normalized[1]), normalizeString(normalized[2])].filter(Boolean);
+  if (executable === "exclusive-dawn" || executable === "exclusive-dawn.js") {
+    return ["exclusive-dawn", normalizeString(normalized[1]), normalizeString(normalized[2])].filter(Boolean);
   }
 
   return normalized;

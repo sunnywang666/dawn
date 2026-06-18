@@ -1,4 +1,4 @@
-const test = require("node:test");
+﻿const test = require("node:test");
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const os = require("node:os");
@@ -9,15 +9,15 @@ const {
   buildClaudeProjectMcpServerConfig,
 } = require("../src/adapters/runtime/claudecode/project-settings");
 
-test("ensureClaudeProjectMcpConfig upserts cyberboss MCP server into workspace .mcp.json", () => {
-  const root = fs.mkdtempSync(path.join(os.tmpdir(), "cyberboss-claude-settings-"));
+test("ensureClaudeProjectMcpConfig upserts Dawn MCP server into workspace .mcp.json", () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "dawn-claude-settings-"));
   const workspaceRoot = path.join(root, "workspace");
-  const cyberbossHome = path.join(root, "cyberboss-home");
+  const appHome = path.join(root, "dawn-home");
   const configPath = path.join(workspaceRoot, ".mcp.json");
 
   fs.mkdirSync(workspaceRoot, { recursive: true });
-  fs.mkdirSync(path.join(cyberbossHome, "bin"), { recursive: true });
-  fs.writeFileSync(path.join(cyberbossHome, "bin", "cyberboss.js"), "#!/usr/bin/env node\n", "utf8");
+  fs.mkdirSync(path.join(appHome, "bin"), { recursive: true });
+  fs.writeFileSync(path.join(appHome, "bin", "exclusive-dawn.js"), "#!/usr/bin/env node\n", "utf8");
   fs.writeFileSync(configPath, JSON.stringify({
     mcpServers: {
       other: {
@@ -27,7 +27,7 @@ test("ensureClaudeProjectMcpConfig upserts cyberboss MCP server into workspace .
     },
   }, null, 2));
 
-  const result = ensureClaudeProjectMcpConfig({ workspaceRoot, cyberbossHome });
+  const result = ensureClaudeProjectMcpConfig({ workspaceRoot, appHome });
   const saved = JSON.parse(fs.readFileSync(configPath, "utf8"));
 
   assert.equal(result.configPath, configPath);
@@ -35,35 +35,35 @@ test("ensureClaudeProjectMcpConfig upserts cyberboss MCP server into workspace .
     command: "uvx",
     args: ["other"],
   });
-  assert.deepEqual(saved.mcpServers.cyberboss_tools, buildClaudeProjectMcpServerConfig({
+  assert.deepEqual(saved.mcpServers.dawn_tools, buildClaudeProjectMcpServerConfig({
     workspaceRoot,
-    cyberbossHome,
+    appHome,
   }));
 });
 
-test("ensureClaudeProjectMcpConfig rewrites stale cyberboss MCP server config", () => {
-  const root = fs.mkdtempSync(path.join(os.tmpdir(), "cyberboss-claude-settings-stale-"));
+test("ensureClaudeProjectMcpConfig rewrites stale Dawn MCP server config", () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "dawn-claude-settings-stale-"));
   const workspaceRoot = path.join(root, "workspace");
-  const cyberbossHome = path.join(root, "cyberboss-home");
+  const appHome = path.join(root, "dawn-home");
   const configPath = path.join(workspaceRoot, ".mcp.json");
 
   fs.mkdirSync(workspaceRoot, { recursive: true });
-  fs.mkdirSync(path.join(cyberbossHome, "bin"), { recursive: true });
-  fs.writeFileSync(path.join(cyberbossHome, "bin", "cyberboss.js"), "#!/usr/bin/env node\n", "utf8");
+  fs.mkdirSync(path.join(appHome, "bin"), { recursive: true });
+  fs.writeFileSync(path.join(appHome, "bin", "exclusive-dawn.js"), "#!/usr/bin/env node\n", "utf8");
   fs.writeFileSync(configPath, JSON.stringify({
     mcpServers: {
-      cyberboss_tools: {
+      dawn_tools: {
         command: "node",
         args: ["old.js"],
       },
     },
   }, null, 2));
 
-  ensureClaudeProjectMcpConfig({ workspaceRoot, cyberbossHome });
+  ensureClaudeProjectMcpConfig({ workspaceRoot, appHome });
 
   const saved = JSON.parse(fs.readFileSync(configPath, "utf8"));
-  assert.deepEqual(saved.mcpServers.cyberboss_tools, buildClaudeProjectMcpServerConfig({
+  assert.deepEqual(saved.mcpServers.dawn_tools, buildClaudeProjectMcpServerConfig({
     workspaceRoot,
-    cyberbossHome,
+    appHome,
   }));
 });

@@ -66,7 +66,7 @@ function createRuntimeAdapter(config, deps = {}) {
   return createCodexRuntimeAdapter(config);
 }
 
-class CyberbossApp {
+class DawnApp {
   constructor(config) {
     this.config = config;
     const sharedHistory = new SharedHistoryStore({ filePath: config.sharedHistoryFile });
@@ -877,6 +877,10 @@ class CyberbossApp {
       if (this.isTurnDispatchBlocked(draft.bindingKey, draft.workspaceRoot, { ignoreBoundary })) {
         continue;
       }
+      // Respect the debounce window: if a timer is still counting down, wait for it.
+      if (this.pendingInboundFlushTimersByScope.has(scopeKey)) {
+        continue;
+      }
       const pendingDispatch = this.mergePendingInboundDraft(draft);
       if (!pendingDispatch?.prepared) {
         this.pendingInboundByScope.delete(scopeKey);
@@ -1667,7 +1671,7 @@ class CyberbossApp {
     if (typeof this.runtimeAdapter.forceSwitch !== "function") {
       await this.channelAdapter.sendText({
         userId: normalized.senderId,
-        text: "💡 /use requires runtime fallback to be enabled (CYBERBOSS_RUNTIME_FALLBACK_ENABLED=true).",
+        text: "💡 /use requires runtime fallback to be enabled (DAWN_RUNTIME_FALLBACK_ENABLED=true).",
         contextToken: normalized.contextToken,
       });
       return;
@@ -1717,7 +1721,7 @@ class CyberbossApp {
         "⭐️ Liked this project? Throw me a star on GitHub!",
         "It really means a lot to an indie dev working on passion projects 💖",
         "",
-        "https://github.com/WenXiaoWendy/cyberboss",
+        "https://github.com/WenXiaoWendy/exclusive-dawn",
       ].join("\n"),
       contextToken: normalized.contextToken,
     });
@@ -2019,7 +2023,7 @@ function formatContextStatusLine({ runtimeName, context, claudeContextWindow, cl
   if (runtimeName === "claudecode") {
     const configuredWindow = Number(claudeContextWindow);
     if (!Number.isFinite(configuredWindow) || configuredWindow <= 0) {
-      return "📦 context: set CYBERBOSS_CLAUDE_CONTEXT_WINDOW";
+      return "📦 context: set DAWN_CLAUDE_CONTEXT_WINDOW";
     }
     const reservedOutputTokens = Math.max(0, Number(claudeMaxOutputTokens) || 0);
     const availableMessageWindow = configuredWindow - reservedOutputTokens;
@@ -2311,7 +2315,7 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-module.exports = { CyberbossApp };
+module.exports = { DawnApp };
 
 function parseChannelCommand(text) {
   const normalized = typeof text === "string" ? text.trim() : "";
@@ -2442,7 +2446,7 @@ function matchesBuiltInCommandPrefix(commandTokens) {
     return true;
   }
 
-   if (normalized[0] === "mcp_tool" && normalized[1] === "cyberboss_tools") {
+  if (normalized[0] === "mcp_tool" && normalized[1] === "dawn_tools") {
     return true;
   }
 

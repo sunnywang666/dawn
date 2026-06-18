@@ -1,16 +1,16 @@
-# 在手机上用 Termius + tmux 查看 Cyberboss 共享终端
+﻿# 在手机上用 Termius + tmux 查看 Dawn 共享终端
 
 这份文档是给不熟悉命令行的用户准备的。
 
 目标只有一个：
 
-- 让你在手机上随时查看 `Cyberboss` 当前绑定线程的运行情况
+- 让你在手机上随时查看 `Dawn` 当前绑定线程的运行情况
 - 必要时在手机上接管同一条共享线程
 - 尽量避免因为目录、runtime、tmux 用法不对而报错
 
 这份文档默认你已经：
 
-- 在一台长期在线的电脑或服务器上安装好了 `Cyberboss`
+- 在一台长期在线的电脑或服务器上安装好了 `Dawn`
 - 可以用 `Termius` 从手机 SSH 登录到那台机器
 - 机器上已经安装了 `tmux`
 
@@ -19,7 +19,7 @@
 先只记住这 3 个名字：
 
 1. `npm run shared:start`
-   这是共享桥主进程。它负责跑 Cyberboss 和微信桥。
+   这是共享桥主进程。它负责跑 Dawn 和微信桥。
 
 2. `npm run shared:open`
    这是共享线程观察/接管窗口。它会接入当前微信绑定的那条线程。
@@ -47,25 +47,25 @@
 下面所有命令都默认你的项目在：
 
 ```bash
-/Users/tingyiwen/Dev/cyberboss
+/Users/tingyiwen/Dev/exclusive-dawn
 ```
 
 如果你的路径不是这个，请把文档里的路径替换成你自己的。
 
-很多报错都不是 Cyberboss 坏了，而是因为你不在项目目录里执行命令。
+很多报错都不是 Dawn 坏了，而是因为你不在项目目录里执行命令。
 
 ## 第一次启动：开共享桥
 
 先在手机的 Termius 里 SSH 登录到机器，然后执行：
 
 ```bash
-tmux new-session -d -s cb-bridge -c /Users/tingyiwen/Dev/cyberboss 'npm run shared:start; exec zsh'
+tmux new-session -d -s cb-bridge -c /Users/tingyiwen/Dev/exclusive-dawn 'npm run shared:start; exec zsh'
 ```
 
 这条命令的意思是：
 
 - 新建一个叫 `cb-bridge` 的 tmux session
-- 进入 `Cyberboss` 项目目录
+- 进入 `Dawn` 项目目录
 - 执行 `npm run shared:start`
 - 如果命令退出，不要立刻关掉窗口，而是留在 `zsh` 里方便你看报错
 
@@ -104,7 +104,7 @@ d
 共享桥已经跑起来后，再开一个单独的 tmux session：
 
 ```bash
-tmux new-session -d -s cb-open -c /Users/tingyiwen/Dev/cyberboss 'npm run shared:open; exec zsh'
+tmux new-session -d -s cb-open -c /Users/tingyiwen/Dev/exclusive-dawn 'npm run shared:open; exec zsh'
 ```
 
 然后 attach：
@@ -196,14 +196,14 @@ d
 
 ```bash
 tmux kill-session -t cb-open
-tmux new-session -d -s cb-open -c /Users/tingyiwen/Dev/cyberboss 'npm run shared:open; exec zsh'
+tmux new-session -d -s cb-open -c /Users/tingyiwen/Dev/exclusive-dawn 'npm run shared:open; exec zsh'
 ```
 
 ### 7. 杀掉共享桥窗口，再重新开
 
 ```bash
 tmux kill-session -t cb-bridge
-tmux new-session -d -s cb-bridge -c /Users/tingyiwen/Dev/cyberboss 'npm run shared:start; exec zsh'
+tmux new-session -d -s cb-bridge -c /Users/tingyiwen/Dev/exclusive-dawn 'npm run shared:start; exec zsh'
 ```
 
 ### 8. 看共享桥状态
@@ -211,7 +211,7 @@ tmux new-session -d -s cb-bridge -c /Users/tingyiwen/Dev/cyberboss 'npm run shar
 如果你不确定桥是不是还活着，在项目目录执行：
 
 ```bash
-cd /Users/tingyiwen/Dev/cyberboss
+cd /Users/tingyiwen/Dev/exclusive-dawn
 npm run shared:status
 ```
 
@@ -229,9 +229,9 @@ npm run shared:status
 直接复制：
 
 ```bash
-tmux new-session -d -s cb-bridge -c /Users/tingyiwen/Dev/cyberboss 'npm run shared:start; exec zsh'
-tmux new-session -d -s cb-open -c /Users/tingyiwen/Dev/cyberboss 'npm run shared:open; exec zsh'
-cd /Users/tingyiwen/Dev/cyberboss
+tmux new-session -d -s cb-bridge -c /Users/tingyiwen/Dev/exclusive-dawn 'npm run shared:start; exec zsh'
+tmux new-session -d -s cb-open -c /Users/tingyiwen/Dev/exclusive-dawn 'npm run shared:open; exec zsh'
+cd /Users/tingyiwen/Dev/exclusive-dawn
 npm run shared:status
 ```
 
@@ -246,7 +246,7 @@ tmux attach -r -t cb-open
 如果提示没有这个 session，再执行：
 
 ```bash
-tmux new-session -d -s cb-open -c /Users/tingyiwen/Dev/cyberboss 'npm run shared:open; exec zsh'
+tmux new-session -d -s cb-open -c /Users/tingyiwen/Dev/exclusive-dawn 'npm run shared:open; exec zsh'
 tmux attach -t cb-open
 ```
 
@@ -263,7 +263,7 @@ tmux attach -t cb-open
 命令：
 
 ```bash
-cd /Users/tingyiwen/Dev/cyberboss
+cd /Users/tingyiwen/Dev/exclusive-dawn
 npm run shared:status
 tmux attach -t cb-bridge
 tmux attach -t cb-open
@@ -292,7 +292,7 @@ tmux attach -t cb-open
 例如正确写法是：
 
 ```bash
-tmux new-session -d -s cb-open -c /Users/tingyiwen/Dev/cyberboss 'npm run shared:open; exec zsh'
+tmux new-session -d -s cb-open -c /Users/tingyiwen/Dev/exclusive-dawn 'npm run shared:open; exec zsh'
 ```
 
 不是：
@@ -319,7 +319,7 @@ tmux attach -t cb-open
 
 ```bash
 tmux kill-session -t cb-open
-tmux new-session -d -s cb-open -c /Users/tingyiwen/Dev/cyberboss 'npm run shared:open; exec zsh'
+tmux new-session -d -s cb-open -c /Users/tingyiwen/Dev/exclusive-dawn 'npm run shared:open; exec zsh'
 ```
 
 ### 报错 3：`Claude IPC socket not found`
@@ -329,20 +329,20 @@ tmux new-session -d -s cb-open -c /Users/tingyiwen/Dev/cyberboss 'npm run shared
 它几乎总是在说明：
 
 - 你以为自己在跑 `codex`
-- 但环境变量里实际还是 `CYBERBOSS_RUNTIME=claudecode`
+- 但环境变量里实际还是 `DAWN_RUNTIME=claudecode`
 - 所以 `shared:open` 试图连接 Claude 的 IPC socket
 
 先检查项目里的 `.env`：
 
 ```bash
-cd /Users/tingyiwen/Dev/cyberboss
+cd /Users/tingyiwen/Dev/exclusive-dawn
 cat .env
 ```
 
 如果里面有：
 
 ```env
-CYBERBOSS_RUNTIME=claudecode
+DAWN_RUNTIME=claudecode
 ```
 
 而你现在要用的是 `codex`，那就两种方式：
@@ -350,13 +350,13 @@ CYBERBOSS_RUNTIME=claudecode
 方式 1：这次临时强制用 `codex`
 
 ```bash
-tmux new-session -d -s cb-open -c /Users/tingyiwen/Dev/cyberboss 'CYBERBOSS_RUNTIME=codex npm run shared:open; exec zsh'
+tmux new-session -d -s cb-open -c /Users/tingyiwen/Dev/exclusive-dawn 'DAWN_RUNTIME=codex npm run shared:open; exec zsh'
 ```
 
 方式 2：直接改 `.env`
 
 ```env
-CYBERBOSS_RUNTIME=codex
+DAWN_RUNTIME=codex
 ```
 
 ## 推荐你固定记住的 4 条“安全命令”
@@ -364,7 +364,7 @@ CYBERBOSS_RUNTIME=codex
 ### 只看状态，不改东西
 
 ```bash
-cd /Users/tingyiwen/Dev/cyberboss
+cd /Users/tingyiwen/Dev/exclusive-dawn
 npm run shared:status
 ```
 
@@ -378,14 +378,14 @@ tmux attach -r -t cb-open
 
 ```bash
 tmux kill-session -t cb-open
-tmux new-session -d -s cb-open -c /Users/tingyiwen/Dev/cyberboss 'npm run shared:open; exec zsh'
+tmux new-session -d -s cb-open -c /Users/tingyiwen/Dev/exclusive-dawn 'npm run shared:open; exec zsh'
 ```
 
 ### 重建 bridge 窗口
 
 ```bash
 tmux kill-session -t cb-bridge
-tmux new-session -d -s cb-bridge -c /Users/tingyiwen/Dev/cyberboss 'npm run shared:start; exec zsh'
+tmux new-session -d -s cb-bridge -c /Users/tingyiwen/Dev/exclusive-dawn 'npm run shared:start; exec zsh'
 ```
 
 ## 不建议做的事
@@ -407,19 +407,19 @@ tmux new-session -d -s cb-bridge -c /Users/tingyiwen/Dev/cyberboss 'npm run shar
 启动共享桥：
 
 ```bash
-tmux new-session -d -s cb-bridge -c /Users/tingyiwen/Dev/cyberboss 'npm run shared:start; exec zsh'
+tmux new-session -d -s cb-bridge -c /Users/tingyiwen/Dev/exclusive-dawn 'npm run shared:start; exec zsh'
 ```
 
 启动共享线程窗口：
 
 ```bash
-tmux new-session -d -s cb-open -c /Users/tingyiwen/Dev/cyberboss 'npm run shared:open; exec zsh'
+tmux new-session -d -s cb-open -c /Users/tingyiwen/Dev/exclusive-dawn 'npm run shared:open; exec zsh'
 ```
 
 查看桥状态：
 
 ```bash
-cd /Users/tingyiwen/Dev/cyberboss
+cd /Users/tingyiwen/Dev/exclusive-dawn
 npm run shared:status
 ```
 
@@ -437,7 +437,7 @@ Ctrl+b 然后 d
 
 ## 你真正需要记住的一句话
 
-如果你只是想在手机上“随时看一眼 Cyberboss 当前线程跑得怎么样”，最稳的思路不是反复新开窗口，而是：
+如果你只是想在手机上“随时看一眼 Dawn 当前线程跑得怎么样”，最稳的思路不是反复新开窗口，而是：
 
 - 先把 `cb-bridge` 和 `cb-open` 固定开在 tmux 里
 - 之后手机和电脑都只是在 **attach 到已有 session**

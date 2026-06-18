@@ -79,8 +79,8 @@ function assembleRuntimeTurnText({ prepared, config = {}, visionContext = {}, no
 
   if (imageAttachments.length) {
     pushSectionBreak(lines);
-    lines.push(`If some images are reusable stickers, load \`cyberboss_sticker_tags\` only when needed. ${STICKER_TAG_GUIDANCE}`);
-    lines.push(`To save reusable stickers, call \`cyberboss_sticker_save_from_inbox\` once with an \`items\` array. Use 1-3 tags. ${STICKER_DESC_GUIDANCE} Skip ordinary photos, screenshots, and unclear images.`);
+    lines.push(`If some images are reusable stickers, load \`dawn_sticker_tags\` only when needed. ${STICKER_TAG_GUIDANCE}`);
+    lines.push(`To save reusable stickers, call \`dawn_sticker_save_from_inbox\` once with an \`items\` array. Use 1-3 tags. ${STICKER_DESC_GUIDANCE} Skip ordinary photos, screenshots, and unclear images.`);
     lines.push("Do not describe save steps. The system sends the sticker notice.");
   }
 
@@ -218,7 +218,7 @@ function buildOperationalTurnGuidance({ originalText = "", config = {} } = {}) {
   guidance.push("Do not narrate your internal process, tool usage, ranking logic, or reminder plan to the user. Give the conclusion and next step directly.");
 
   if (notionReady) {
-    guidance.push("Before replying about schoolwork, tasks, deadlines, workload, or planning, inspect current assignments with `cyberboss_notion_assignments_list` unless the user is obviously asking for pure emotional company.");
+    guidance.push("Before replying about schoolwork, tasks, deadlines, workload, or planning, inspect current assignments with `dawn_notion_assignments_list` unless the user is obviously asking for pure emotional company.");
     guidance.push("Use the Notion workload to ground your reply. Mention specific pending work, due dates, or gaps only when it helps the next action.");
   }
 

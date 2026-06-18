@@ -1,4 +1,4 @@
-const fs = require("fs");
+﻿const fs = require("fs");
 const path = require("path");
 
 const DEFAULT_MIN_INTERVAL_MS = 3 * 60_000;
@@ -44,10 +44,10 @@ class CheckinConfigStore {
 }
 
 function resolveDefaultCheckinRange(env = process.env) {
-  const minIntervalMs = readIntervalMs(env?.CYBERBOSS_CHECKIN_MIN_INTERVAL_MS, DEFAULT_MIN_INTERVAL_MS);
+  const minIntervalMs = readIntervalMs(env?.DAWN_CHECKIN_MIN_INTERVAL_MS, DEFAULT_MIN_INTERVAL_MS);
   const maxIntervalMs = Math.max(
     minIntervalMs,
-    readIntervalMs(env?.CYBERBOSS_CHECKIN_MAX_INTERVAL_MS, DEFAULT_MAX_INTERVAL_MS)
+    readIntervalMs(env?.DAWN_CHECKIN_MAX_INTERVAL_MS, DEFAULT_MAX_INTERVAL_MS)
   );
   return { minIntervalMs, maxIntervalMs };
 }

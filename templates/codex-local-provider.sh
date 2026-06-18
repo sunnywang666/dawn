@@ -1,8 +1,8 @@
-#!/bin/sh
+﻿#!/bin/sh
 set -eu
 
-provider="${CYBERBOSS_CODEX_MODEL_PROVIDER:-}"
-model="${CYBERBOSS_CODEX_MODEL:-}"
+provider="${DAWN_CODEX_MODEL_PROVIDER:-}"
+model="${DAWN_CODEX_MODEL:-}"
 
 if [ "$provider" = "ollama" ]; then
   if [ -n "$model" ]; then

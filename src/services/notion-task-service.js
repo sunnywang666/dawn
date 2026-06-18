@@ -1,4 +1,4 @@
-const NOTION_API_BASE_URL = "https://api.notion.com/v1";
+﻿const NOTION_API_BASE_URL = "https://api.notion.com/v1";
 const NOTION_VERSION = "2022-06-28";
 
 const DEFAULT_ASSIGNMENTS_PAGE_SIZE = 10;
@@ -44,7 +44,7 @@ class NotionTaskService {
     this.ensureConfigured();
     const title = normalizeText(args.title);
     if (!title) {
-      throw new Error("cyberboss_notion_assignment_create input.title is required.");
+      throw new Error("dawn_notion_assignment_create input.title is required.");
     }
     const subject = normalizeText(args.subject);
     const subjectPageId = normalizeText(args.subjectPageId) || await this.findSubjectPageId(subject);
@@ -126,7 +126,7 @@ class NotionTaskService {
 
   ensureConfigured() {
     if (!this.isConfigured()) {
-      throw new Error("Notion task sync is not configured. Set CYBERBOSS_NOTION_API_KEY and CYBERBOSS_NOTION_ASSIGNMENTS_DATABASE_ID.");
+      throw new Error("Notion task sync is not configured. Set DAWN_NOTION_API_KEY and DAWN_NOTION_ASSIGNMENTS_DATABASE_ID.");
     }
   }
 

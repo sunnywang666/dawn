@@ -1,4 +1,4 @@
-const test = require("node:test");
+﻿const test = require("node:test");
 const assert = require("node:assert/strict");
 const fs = require("fs");
 const os = require("os");
@@ -15,7 +15,7 @@ const {
 } = require("../src/services/sticker-service");
 
 function createConfig(overrides = {}) {
-  const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "cyberboss-sticker-test-"));
+  const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "dawn-sticker-test-"));
   const stickersDir = path.join(stateDir, "stickers");
   return {
     stateDir,
@@ -23,10 +23,10 @@ function createConfig(overrides = {}) {
     stickerAssetsDir: path.join(stickersDir, "assets"),
     stickersIndexFile: path.join(stickersDir, "index.json"),
     stickerTagsFile: path.join(stickersDir, "tags.json"),
-    stickersTemplateDir: path.join("/Users/tingyiwen/Dev/cyberboss", "templates", "stickers"),
-    stickersTemplateIndexFile: path.join("/Users/tingyiwen/Dev/cyberboss", "templates", "stickers", "index.json"),
-    stickerTagsTemplateFile: path.join("/Users/tingyiwen/Dev/cyberboss", "templates", "stickers", "tags.json"),
-    stickerNormalizeGifScript: path.join("/Users/tingyiwen/Dev/cyberboss", "scripts", "normalize-sticker-gif.js"),
+    stickersTemplateDir: path.join("/Users/tingyiwen/Dev/exclusive-dawn", "templates", "stickers"),
+    stickersTemplateIndexFile: path.join("/Users/tingyiwen/Dev/exclusive-dawn", "templates", "stickers", "index.json"),
+    stickerTagsTemplateFile: path.join("/Users/tingyiwen/Dev/exclusive-dawn", "templates", "stickers", "tags.json"),
+    stickerNormalizeGifScript: path.join("/Users/tingyiwen/Dev/exclusive-dawn", "scripts", "normalize-sticker-gif.js"),
     accountsDir: path.join(stateDir, "accounts"),
     weixinBaseUrl: "https://ilinkai.weixin.qq.com",
     workspaceId: "default",
@@ -90,7 +90,7 @@ test("sticker service initializes the default tag catalog", () => {
 });
 
 test("sticker service copies the whole template sticker directory when local stickers do not exist", () => {
-  const templateDir = fs.mkdtempSync(path.join(os.tmpdir(), "cyberboss-sticker-template-"));
+  const templateDir = fs.mkdtempSync(path.join(os.tmpdir(), "dawn-sticker-template-"));
   const config = createConfig({
     stickersTemplateDir: templateDir,
     stickersTemplateIndexFile: path.join(templateDir, "index.json"),

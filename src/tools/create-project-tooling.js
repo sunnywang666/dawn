@@ -6,6 +6,7 @@ const { DiaryService } = require("../services/diary-service");
 const { NotionTaskService } = require("../services/notion-task-service");
 const { ReminderService } = require("../services/reminder-service");
 const { StickerService } = require("../services/sticker-service");
+const { NotionLifeService } = require("../services/notion-life-service");
 const { SearchService } = require("../services/search-service");
 const { SystemMessageService } = require("../services/system-message-service");
 const { TimelineService } = require("../services/timeline-service");
@@ -33,6 +34,7 @@ function createProjectTooling(config, options = {}) {
     sticker: new StickerService({ config, channelAdapter, sessionStore, channelFileService: channelFile }),
     timeline: new TimelineService({ config, timelineIntegration, sessionStore }),
     search: new SearchService({ apiKey: config.jinaApiKey }),
+    notionLife: new NotionLifeService({ config }),
     whereabouts: new WhereaboutsService({
       config: {
         storeFile: config.locationStoreFile,

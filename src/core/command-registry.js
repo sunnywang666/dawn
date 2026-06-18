@@ -272,13 +272,13 @@ function listCommandGroups() {
 
 function buildTerminalHelpText() {
   const lines = [
-    "Usage: cyberboss <command>",
+    "Usage: exclusive-dawn <command>",
     "",
     "Current terminal commands:",
-    "  cyberboss start        start the WeChat bridge and runtime loop",
-    "  cyberboss login        start WeChat QR login",
-    "  cyberboss accounts     list locally saved accounts",
-    "  cyberboss doctor       print current config and thread state",
+    "  exclusive-dawn start        start the WeChat bridge and runtime loop",
+    "  exclusive-dawn login        start WeChat QR login",
+    "  exclusive-dawn accounts     list locally saved accounts",
+    "  exclusive-dawn doctor       print current config and thread state",
     "  npm run shared:start   start the shared app-server and WeChat bridge",
     "  npm run shared:open    attach to the shared thread currently bound in WeChat",
     "  npm run shared:status  show shared bridge status",
@@ -296,7 +296,7 @@ function buildTerminalHelpText() {
   }
 
   lines.push("");
-  lines.push("Cyberboss capability operations are exposed to models as project tools, not terminal subcommands.");
+  lines.push("Capability operations are exposed to models as project tools, not terminal subcommands.");
   return lines.join("\n");
 }
 
@@ -370,13 +370,13 @@ function toTerminalCommandExample(commandText) {
     case "start":
     case "doctor":
     case "help":
-      return `cyberboss ${normalized}`;
+      return `exclusive-dawn ${normalized}`;
     case "shared start":
     case "shared open":
     case "shared status":
       return `npm run ${normalized.replace(" ", ":")}`;
     case "start --checkin":
-      return "cyberboss start --checkin";
+      return "exclusive-dawn start --checkin";
     default:
       return normalized;
   }

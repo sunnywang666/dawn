@@ -6,8 +6,8 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-$Root = "D:\GitHub\WenXiaoWendy\cyberboss"
-$StateDir = "D:\GitHub\.cyberboss"
+$Root = "D:\GitHub\exclusive-dawn"
+$StateDir = "D:\GitHub\.exclusive-dawn"
 $LogDir = Join-Path $StateDir "logs"
 $ListenUrl = "ws://127.0.0.1:8765"
 $ReadyzUrl = "http://127.0.0.1:8765/readyz"
@@ -15,9 +15,9 @@ $ReadyzUrl = "http://127.0.0.1:8765/readyz"
 New-Item -ItemType Directory -Force -Path $LogDir | Out-Null
 $launcherLog = Join-Path $LogDir "windows-launcher.log"
 $appLog = Join-Path $LogDir "windows-codex-app-server.log"
-$bridgeLog = Join-Path $LogDir "windows-cyberboss-bridge.log"
+$bridgeLog = Join-Path $LogDir "windows-dawn-bridge.log"
 $appPidFile = Join-Path $StateDir "windows-codex-app-server.pid"
-$bridgePidFile = Join-Path $StateDir "windows-cyberboss-bridge.pid"
+$bridgePidFile = Join-Path $StateDir "windows-dawn-bridge.pid"
 
 function Write-LauncherLog($message) {
   $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
@@ -74,7 +74,7 @@ function Get-LegacyBridgeProcess {
     $processes = Get-CimInstance Win32_Process -Filter "Name = 'node.exe'"
     foreach ($process in $processes) {
       $commandLine = [string]$process.CommandLine
-      if ($commandLine -like "*bin*cyberboss.js*start*--checkin*") {
+      if ($commandLine -like "*bin*exclusive-dawn.js*start*--checkin*") {
         return $process
       }
     }
@@ -136,16 +136,16 @@ if ($RestartAll) {
 }
 
 if ($RestartBridge) {
-  $stoppedManagedBridge = Stop-ManagedProcess "cyberboss bridge" $bridgePidFile
+  $stoppedManagedBridge = Stop-ManagedProcess "dawn bridge" $bridgePidFile
   if (-not $stoppedManagedBridge) {
     $legacyBridge = Get-LegacyBridgeProcess
     if ($legacyBridge) {
       try {
-        Write-LauncherLog "stopping legacy cyberboss bridge pid=$($legacyBridge.ProcessId)"
+        Write-LauncherLog "stopping legacy dawn bridge pid=$($legacyBridge.ProcessId)"
         Stop-Process -Id $legacyBridge.ProcessId -Force -ErrorAction Stop
-        Write-LauncherLog "legacy cyberboss bridge stopped"
+        Write-LauncherLog "legacy dawn bridge stopped"
       } catch {
-        Write-LauncherLog "failed to stop legacy cyberboss bridge pid=$($legacyBridge.ProcessId): $($_.Exception.Message)"
+        Write-LauncherLog "failed to stop legacy dawn bridge pid=$($legacyBridge.ProcessId): $($_.Exception.Message)"
       }
     }
   }
@@ -177,12 +177,12 @@ if (Test-AppServerReady -and -not $RestartAppServer) {
 }
 
 if (Test-ManagedRunning $bridgePidFile -and -not $RestartBridge) {
-  Write-LauncherLog "cyberboss bridge already running"
+  Write-LauncherLog "dawn bridge already running"
 } elseif ((Get-LegacyBridgeProcess) -and -not $RestartBridge) {
-  Write-LauncherLog "legacy cyberboss bridge already running without pid file"
+  Write-LauncherLog "legacy dawn bridge already running without pid file"
 } else {
-  Write-LauncherLog "starting cyberboss bridge with checkin"
-  [void](Start-ManagedProcess "cyberboss bridge" $bridgePidFile "`$env:CYBERBOSS_CODEX_ENDPOINT='$ListenUrl'; Set-Location -LiteralPath '$Root'; node .\bin\cyberboss.js start --checkin *>> '$bridgeLog'")
+  Write-LauncherLog "starting dawn bridge with checkin"
+  [void](Start-ManagedProcess "dawn bridge" $bridgePidFile "Set-Location -LiteralPath '$Root'; node .\bin\exclusive-dawn.js start --checkin *>> '$bridgeLog'")
 }
 
 Write-LauncherLog "launcher finished"

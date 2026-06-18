@@ -1,4 +1,4 @@
-const path = require("path");
+﻿const path = require("path");
 const os = require("os");
 const { ClaudeCodeProcessClient } = require("./process-client");
 const { mapClaudeCodeMessageToRuntimeEvent } = require("./events");
@@ -13,7 +13,7 @@ function createClaudeCodeRuntimeAdapter(config) {
   const clientsByWorkspace = new Map();
   const pendingApprovals = new Map();
   let globalListener = null;
-  const stateDir = config.stateDir || path.join(os.homedir(), ".cyberboss");
+  const stateDir = config.stateDir || path.join(os.homedir(), ".exclusive-dawn");
   const ipcSocketPath = resolveIpcSocketPath(stateDir);
   const ipcTokenFile = path.join(stateDir, "claudecode-runtime.token");
   const ipcServer = new ClaudeCodeIpcServer({ socketPath: ipcSocketPath, tokenFile: ipcTokenFile });
@@ -39,7 +39,7 @@ function createClaudeCodeRuntimeAdapter(config) {
     }
     const projectSettings = ensureClaudeProjectMcpConfig({
       workspaceRoot,
-      cyberbossHome: process.env.CYBERBOSS_HOME || path.resolve(__dirname, "..", "..", "..", ".."),
+      appHome: process.env.DAWN_HOME || path.resolve(__dirname, "..", "..", "..", ".."),
     });
     console.log(
       `[claudecode-runtime] workspace=${workspaceRoot} mcp_config=${projectSettings.configPath} server=${projectSettings.serverName}`
@@ -171,7 +171,7 @@ function createClaudeCodeRuntimeAdapter(config) {
     },
     getTurnCapabilities() {
       return {
-        nativeImageInput: false,
+        nativeImageInput: true,
         toolImageRead: false,
       };
     },
@@ -255,7 +255,7 @@ function createClaudeCodeRuntimeAdapter(config) {
     async sendTextTurn(args) {
       return this.sendTurn(args);
     },
-    async sendTurn({ bindingKey, workspaceRoot, text, metadata = {}, model = "" }) {
+    async sendTurn({ bindingKey, workspaceRoot, text, attachments = [], metadata = {}, model = "" }) {
       let threadId = sessionStore.getThreadIdForWorkspace(bindingKey, workspaceRoot);
       if (!threadId) {
         sessionStore.clearThreadIdForWorkspace(bindingKey, workspaceRoot);
@@ -283,7 +283,7 @@ function createClaudeCodeRuntimeAdapter(config) {
         ? buildOpeningTurnTextWithHistory(config, text, historyMessages)
         : text;
       const outboundThreadId = activeThreadId || threadId || `pending-${Date.now()}`;
-      await client.sendUserMessage({ text: outboundText, threadId: outboundThreadId });
+      await client.sendUserMessage({ text: outboundText, attachments, threadId: outboundThreadId });
       if (!openingTurn) {
         const confirmedSessionId = normalizeThreadId(
           client.sessionId || await client.waitForSessionId({ timeoutMs: CLAUDE_RESUME_SESSION_TIMEOUT_MS })
@@ -327,8 +327,8 @@ function normalizeThreadId(value) {
 
 function resolveIpcSocketPath(stateDir) {
   if (process.platform === "win32") {
-    const suffix = Buffer.from(String(stateDir || "cyberboss")).toString("hex").slice(0, 24);
-    return `\\\\.\\pipe\\cyberboss-claudecode-${suffix || "default"}`;
+    const suffix = Buffer.from(String(stateDir || "exclusive-dawn")).toString("hex").slice(0, 24);
+    return `\\\\.\\pipe\\dawn-claudecode-${suffix || "default"}`;
   }
   return path.join(stateDir, "claudecode-runtime.sock");
 }

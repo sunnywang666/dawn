@@ -6,7 +6,22 @@ const { CheckinConfigStore, resolveDefaultCheckinRange } = require("../core/chec
 const { resolvePreferredSenderId, resolvePreferredWorkspaceRoot } = require("../core/default-targets");
 const { SystemMessageQueueStore } = require("../core/system-message-queue-store");
 
-const INTERNAL_CHECKIN_TRIGGER_TEMPLATE = "%USER% comes to mind again.";
+const INTERNAL_CHECKIN_TRIGGER_TEMPLATE = `[系统 check-in — %DATETIME%]
+
+现在是一次主动联系%USER%的机会。请先用工具收集真实状态，再决定行动，不要只凭感觉发消息。
+
+按顺序做：
+1. 用 dawn_timeline_read 查看今天的时间线，了解她今天做了什么、几点开始、几点停下来
+2. 用 dawn_notion_assignments_list 查近期作业，看有没有快到期或被拖着的
+3. 结合当前时间和上下文，判断她现在大概在做什么、有没有需要推进的事
+
+然后根据判断行动：
+- 有紧急任务或明显在拖延 → 温柔推进
+- 时间很晚还没睡 → 提醒作息
+- 不知道她在干嘛 → 发一句简短问候
+- 她显然在睡觉、上课或不该被打扰 → 什么都不发
+
+直接行动，不要把内部判断过程说出来。`;
 
 async function runSystemCheckinPoller(config) {
   const account = resolveSelectedAccount(config);
@@ -48,22 +63,22 @@ function resolvePollerTarget({ config, account, sessionStore }) {
   const senderId = resolvePreferredSenderId({
     config,
     accountId: account.accountId,
-    explicitUser: process.env.CYBERBOSS_CHECKIN_USER_ID || "",
+    explicitUser: process.env.DAWN_CHECKIN_USER_ID || "",
     sessionStore,
   });
   const workspaceRoot = resolvePreferredWorkspaceRoot({
     config,
     accountId: account.accountId,
     senderId,
-    explicitWorkspace: process.env.CYBERBOSS_CHECKIN_WORKSPACE || "",
+    explicitWorkspace: process.env.DAWN_CHECKIN_WORKSPACE || "",
     sessionStore,
   });
 
   if (!senderId) {
-    throw new Error("Cannot determine the WeChat user for the checkin poller. Set CYBERBOSS_CHECKIN_USER_ID or let the only active user talk to the bot once first.");
+    throw new Error("Cannot determine the WeChat user for the checkin poller. Set DAWN_CHECKIN_USER_ID or let the only active user talk to the bot once first.");
   }
   if (!workspaceRoot) {
-    throw new Error("Cannot determine the workspace for the checkin poller. Set CYBERBOSS_WORKSPACE_ROOT first.");
+    throw new Error("Cannot determine the workspace for the checkin poller. Set DAWN_WORKSPACE_ROOT first.");
   }
 
   return { senderId, workspaceRoot };
@@ -107,7 +122,10 @@ function formatRangeMinutes(range) {
 
 function buildCheckinTrigger(config) {
   const userName = normalizeText(config?.userName) || "the user";
-  return INTERNAL_CHECKIN_TRIGGER_TEMPLATE.replace("%USER%", userName);
+  const dateTime = formatLocalTime(new Date());
+  return INTERNAL_CHECKIN_TRIGGER_TEMPLATE
+    .replace("%USER%", userName)
+    .replace("%DATETIME%", dateTime);
 }
 
 module.exports = { runSystemCheckinPoller };

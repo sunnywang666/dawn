@@ -5,7 +5,7 @@ const dotenv = require("dotenv");
 
 const { readConfig } = require("./core/config");
 const { renderInstructionTemplate } = require("./core/instructions-template");
-const { CyberbossApp } = require("./core/app");
+const { DawnApp } = require("./core/app");
 const { runSystemCheckinPoller } = require("./app/system-checkin-poller");
 const { buildTerminalHelpText } = require("./core/command-registry");
 const { ensureStickerCatalogFilesSync } = require("./services/sticker-service");
@@ -13,14 +13,14 @@ const { createProjectTooling } = require("./tools/create-project-tooling");
 const { runToolMcpServer } = require("./tools/mcp-stdio-server");
 
 function ensureDefaultStateDirectory() {
-  fs.mkdirSync(path.join(os.homedir(), ".cyberboss"), { recursive: true });
+  fs.mkdirSync(path.join(os.homedir(), ".exclusive-dawn"), { recursive: true });
 }
 
 function loadEnv() {
   ensureDefaultStateDirectory();
   const candidates = [
     path.join(process.cwd(), ".env"),
-    path.join(os.homedir(), ".cyberboss", ".env"),
+    path.join(os.homedir(), ".exclusive-dawn", ".env"),
   ];
   for (const envPath of candidates) {
     if (!fs.existsSync(envPath)) {
@@ -33,8 +33,8 @@ function loadEnv() {
 }
 
 function ensureRuntimeEnv() {
-  if (!process.env.CYBERBOSS_HOME) {
-    process.env.CYBERBOSS_HOME = path.resolve(__dirname, "..");
+  if (!process.env.DAWN_HOME) {
+    process.env.DAWN_HOME = path.resolve(__dirname, "..");
   }
 }
 
@@ -103,7 +103,7 @@ async function main() {
   let app = null;
   const getApp = () => {
     if (!app) {
-      app = new CyberbossApp(config);
+      app = new DawnApp(config);
     }
     return app;
   };

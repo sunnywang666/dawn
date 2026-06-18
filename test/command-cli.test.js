@@ -1,4 +1,4 @@
-const test = require("node:test");
+﻿const test = require("node:test");
 const assert = require("node:assert/strict");
 const fs = require("fs");
 const os = require("os");
@@ -8,7 +8,7 @@ const { resolveBodyInput } = require("../src/services/text-input");
 const { buildTimelineFailureMessage, prepareTimelineInvocation } = require("../src/integrations/timeline");
 
 function createTempFile(name, content) {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "cyberboss-command-test-"));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "dawn-command-test-"));
   const filePath = path.join(dir, name);
   fs.writeFileSync(filePath, content, "utf8");
   return filePath;

@@ -1,7 +1,7 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 
-const { CyberbossApp } = require("../src/core/app");
+const { DawnApp } = require("../src/core/app");
 const { TurnGateStore } = require("../src/core/turn-gate-store");
 
 test("turn gate tracks pending scopes until the turn is released", () => {
@@ -67,11 +67,11 @@ test("handlePreparedMessage queues a normal inbound message while the scope is b
     bufferPendingInboundMessage({ bindingKey, workspaceRoot, prepared }) {
       queued.push({ bindingKey, workspaceRoot, ...prepared });
     },
-    isTurnDispatchBlocked: CyberbossApp.prototype.isTurnDispatchBlocked,
-    routePreparedInbound: CyberbossApp.prototype.routePreparedInbound,
+    isTurnDispatchBlocked: DawnApp.prototype.isTurnDispatchBlocked,
+    routePreparedInbound: DawnApp.prototype.routePreparedInbound,
   };
 
-  await CyberbossApp.prototype.handlePreparedMessage.call(appLike, {
+  await DawnApp.prototype.handlePreparedMessage.call(appLike, {
     workspaceId: "default",
     accountId: "acc-1",
     senderId: "user-1",
@@ -135,10 +135,10 @@ test("dispatchSystemMessage yields when a local pending turn already owns the wo
     async handlePreparedMessage() {
       handled = true;
     },
-    isTurnDispatchBlocked: CyberbossApp.prototype.isTurnDispatchBlocked,
+    isTurnDispatchBlocked: DawnApp.prototype.isTurnDispatchBlocked,
   };
 
-  const dispatched = await CyberbossApp.prototype.dispatchSystemMessage.call(appLike, {
+  const dispatched = await DawnApp.prototype.dispatchSystemMessage.call(appLike, {
     senderId: "user-1",
     id: "system-1",
     text: "ping",
@@ -198,11 +198,11 @@ test("handlePreparedMessage queues while the scope is in a turn-boundary handoff
     bufferPendingInboundMessage({ bindingKey, workspaceRoot, prepared }) {
       queued.push({ bindingKey, workspaceRoot, ...prepared });
     },
-    isTurnDispatchBlocked: CyberbossApp.prototype.isTurnDispatchBlocked,
-    routePreparedInbound: CyberbossApp.prototype.routePreparedInbound,
+    isTurnDispatchBlocked: DawnApp.prototype.isTurnDispatchBlocked,
+    routePreparedInbound: DawnApp.prototype.routePreparedInbound,
   };
 
-  await CyberbossApp.prototype.handlePreparedMessage.call(appLike, {
+  await DawnApp.prototype.handlePreparedMessage.call(appLike, {
     workspaceId: "default",
     accountId: "acc-1",
     senderId: "user-1",
@@ -263,7 +263,7 @@ test("dispatchPreparedTurn binds reply target to the explicit turn id when runti
     },
   };
 
-  const dispatched = await CyberbossApp.prototype.dispatchPreparedTurn.call(appLike, {
+  const dispatched = await DawnApp.prototype.dispatchPreparedTurn.call(appLike, {
     bindingKey: "binding-1",
     workspaceRoot: "/workspace",
     prepared: {
@@ -335,7 +335,7 @@ test("completed turns flush queued inbound work before system messages", async (
     },
   };
 
-  await CyberbossApp.prototype.handleRuntimeEvent.call(appLike, {
+  await DawnApp.prototype.handleRuntimeEvent.call(appLike, {
     type: "runtime.turn.completed",
     payload: { threadId: "thread-1", turnId: "turn-1" },
   });
@@ -387,7 +387,7 @@ test("completed turns keep the boundary closed until queued inbound work has bee
     },
   };
 
-  await CyberbossApp.prototype.handleRuntimeEvent.call(appLike, {
+  await DawnApp.prototype.handleRuntimeEvent.call(appLike, {
     type: "runtime.turn.completed",
     payload: { threadId: "thread-1", turnId: "turn-1" },
   });
@@ -438,7 +438,7 @@ test("completed turns flush queued inbound work before system messages", async (
     },
   };
 
-  await CyberbossApp.prototype.handleRuntimeEvent.call(appLike, {
+  await DawnApp.prototype.handleRuntimeEvent.call(appLike, {
     type: "runtime.turn.completed",
     payload: { threadId: "thread-1", turnId: "turn-1" },
   });
@@ -488,7 +488,7 @@ test("failed turns still send error back when thread binding lookup is missing",
       },
     },
     async sendFailureToThread(threadId, text, fallbackTarget) {
-      return CyberbossApp.prototype.sendFailureToThread.call(this, threadId, text, fallbackTarget);
+      return DawnApp.prototype.sendFailureToThread.call(this, threadId, text, fallbackTarget);
     },
     async stopTypingForThread() {},
     async flushPendingInboundMessages() {},
@@ -498,7 +498,7 @@ test("failed turns still send error back when thread binding lookup is missing",
     },
   };
 
-  await CyberbossApp.prototype.handleRuntimeEvent.call(appLike, {
+  await DawnApp.prototype.handleRuntimeEvent.call(appLike, {
     type: "runtime.turn.failed",
     payload: {
       threadId: "thread-1",
@@ -554,10 +554,10 @@ test("flushPendingInboundMessages batches queued messages from the same scope in
       dispatched.push(payload);
       return true;
     },
-    mergePendingInboundDraft: CyberbossApp.prototype.mergePendingInboundDraft,
+    mergePendingInboundDraft: DawnApp.prototype.mergePendingInboundDraft,
   };
 
-  await CyberbossApp.prototype.flushPendingInboundMessages.call(appLike);
+  await DawnApp.prototype.flushPendingInboundMessages.call(appLike);
 
   assert.equal(dispatched.length, 1);
   assert.equal(dispatched[0].prepared.contextToken, "ctx-1");
@@ -614,10 +614,10 @@ test("flushPendingInboundMessages falls back to messageId ordering when received
       dispatched.push(payload);
       return true;
     },
-    mergePendingInboundDraft: CyberbossApp.prototype.mergePendingInboundDraft,
+    mergePendingInboundDraft: DawnApp.prototype.mergePendingInboundDraft,
   };
 
-  await CyberbossApp.prototype.flushPendingInboundMessages.call(appLike);
+  await DawnApp.prototype.flushPendingInboundMessages.call(appLike);
 
   assert.equal(dispatched.length, 1);
   assert.equal(dispatched[0].prepared.contextToken, "ctx-200");

@@ -1,10 +1,10 @@
-const test = require("node:test");
+﻿const test = require("node:test");
 const assert = require("node:assert/strict");
 const os = require("node:os");
 const path = require("node:path");
 const fs = require("node:fs");
 
-const { CyberbossApp } = require("../src/core/app");
+const { DawnApp } = require("../src/core/app");
 const { mapClaudeCodeMessageToRuntimeEvent } = require("../src/adapters/runtime/claudecode/events");
 const { SessionStore } = require("../src/adapters/runtime/codex/session-store");
 
@@ -15,11 +15,11 @@ test("claudecode approval events extract command tokens from exec_command input"
     requestId: "req-1",
     toolName: "exec_command",
     input: {
-      cmd: "cyberboss reminder write --delay 30m --text 'Reminder text'",
+      cmd: "exclusive-dawn reminder write --delay 30m --text 'Reminder text'",
     },
   });
 
-  assert.deepEqual(event.payload.commandTokens, ["cyberboss", "reminder", "write"]);
+  assert.deepEqual(event.payload.commandTokens, ["exclusive-dawn", "reminder", "write"]);
 });
 
 test("claudecode approval events prefer prefix_rule when present", () => {
@@ -44,11 +44,11 @@ test("claudecode approval events canonicalize diary commands for stable always m
     requestId: "req-diary",
     toolName: "exec_command",
     input: {
-      cmd: "/Users/tingyiwen/Dev/cyberboss/bin/cyberboss diary write --date 2026-04-17 --title '4.17' --text 'hello'",
+      cmd: "/Users/tingyiwen/Dev/exclusive-dawn/bin/exclusive-dawn diary write --date 2026-04-17 --title '4.17' --text 'hello'",
     },
   });
 
-  assert.deepEqual(event.payload.commandTokens, ["cyberboss", "diary", "write"]);
+  assert.deepEqual(event.payload.commandTokens, ["exclusive-dawn", "diary", "write"]);
 });
 
 test("claudecode approval events canonicalize view_image tool approvals", () => {
@@ -70,15 +70,15 @@ test("claudecode approval events canonicalize MCP tool approvals for stable alwa
     type: "approval.requested",
     sessionId: "thread-1",
     requestId: "req-mcp-timeline",
-    toolName: "mcp__cyberboss_tools__cyberboss_timeline_write",
+    toolName: "mcp__dawn_tools__dawn_timeline_write",
     input: {
       date: "2026-04-21",
       events: [],
     },
   });
 
-  assert.deepEqual(event.payload.commandTokens, ["mcp_tool", "cyberboss_tools", "cyberboss_timeline_write"]);
-  assert.match(event.payload.command, /^cyberboss_timeline_write\b/);
+  assert.deepEqual(event.payload.commandTokens, ["mcp_tool", "dawn_tools", "dawn_timeline_write"]);
+  assert.match(event.payload.command, /^dawn_timeline_write\b/);
 });
 
 test("claudecode approval events canonicalize Read image approvals for stable matching", () => {
@@ -88,12 +88,12 @@ test("claudecode approval events canonicalize Read image approvals for stable ma
     requestId: "req-read-image",
     toolName: "Read",
     input: {
-      file_path: "/Users/tingyiwen/.cyberboss/inbox/2026-04-17/attachment-5.jpg",
+      file_path: "/Users/tingyiwen/.exclusive-dawn/inbox/2026-04-17/attachment-5.jpg",
     },
   });
 
   assert.deepEqual(event.payload.commandTokens, ["read_image"]);
-  assert.equal(event.payload.filePath, "/Users/tingyiwen/.cyberboss/inbox/2026-04-17/attachment-5.jpg");
+  assert.equal(event.payload.filePath, "/Users/tingyiwen/.exclusive-dawn/inbox/2026-04-17/attachment-5.jpg");
 });
 
 test("claudecode approval events keep non-image Read approvals as file reads", () => {
@@ -103,12 +103,12 @@ test("claudecode approval events keep non-image Read approvals as file reads", (
     requestId: "req-read-text",
     toolName: "Read",
     input: {
-      file_path: "/Users/tingyiwen/.cyberboss/inbox/2026-04-17/note.txt",
+      file_path: "/Users/tingyiwen/.exclusive-dawn/inbox/2026-04-17/note.txt",
     },
   });
 
   assert.deepEqual(event.payload.commandTokens, []);
-  assert.equal(event.payload.filePath, "/Users/tingyiwen/.cyberboss/inbox/2026-04-17/note.txt");
+  assert.equal(event.payload.filePath, "/Users/tingyiwen/.exclusive-dawn/inbox/2026-04-17/note.txt");
 });
 
 test("claudecode approval events capture Write file paths for state-dir auto approve", () => {
@@ -118,13 +118,13 @@ test("claudecode approval events capture Write file paths for state-dir auto app
     requestId: "req-write",
     toolName: "Write",
     input: {
-      file_path: "/Users/tingyiwen/.cyberboss/notes/today.md",
+      file_path: "/Users/tingyiwen/.exclusive-dawn/notes/today.md",
       content: "hello",
     },
   });
 
-  assert.equal(event.payload.filePath, "/Users/tingyiwen/.cyberboss/notes/today.md");
-  assert.deepEqual(event.payload.filePaths, ["/Users/tingyiwen/.cyberboss/notes/today.md"]);
+  assert.equal(event.payload.filePath, "/Users/tingyiwen/.exclusive-dawn/notes/today.md");
+  assert.deepEqual(event.payload.filePaths, ["/Users/tingyiwen/.exclusive-dawn/notes/today.md"]);
 });
 
 test("claudecode assistant events map usage into context snapshots", () => {
@@ -185,12 +185,12 @@ test("handleRuntimeEvent prompts for project shell commands instead of auto-appr
     },
   };
 
-  await CyberbossApp.prototype.handleRuntimeEvent.call(appLike, {
+  await DawnApp.prototype.handleRuntimeEvent.call(appLike, {
     type: "runtime.approval.requested",
     payload: {
       threadId: "thread-1",
       requestId: "req-3",
-      commandTokens: ["cyberboss", "timeline", "write", "--date", "2026-04-17"],
+      commandTokens: ["exclusive-dawn", "timeline", "write", "--date", "2026-04-17"],
     },
   });
 
@@ -225,7 +225,7 @@ test("handleNewCommand asks runtime to start a fresh draft before clearing the s
     },
   };
 
-  await CyberbossApp.prototype.handleNewCommand.call(appLike, {
+  await DawnApp.prototype.handleNewCommand.call(appLike, {
     workspaceId: "default",
     accountId: "account-1",
     senderId: "user-1",
@@ -277,7 +277,7 @@ test("handleCompactCommand invokes runtime compaction for the current thread", a
     },
   };
 
-  await CyberbossApp.prototype.handleCompactCommand.call(appLike, {
+  await DawnApp.prototype.handleCompactCommand.call(appLike, {
     workspaceId: "default",
     accountId: "account-1",
     senderId: "user-1",
@@ -318,7 +318,7 @@ test("handleCompactCommand reports when there is no active thread", async () => 
     },
   };
 
-  await CyberbossApp.prototype.handleCompactCommand.call(appLike, {
+  await DawnApp.prototype.handleCompactCommand.call(appLike, {
     workspaceId: "default",
     accountId: "account-1",
     senderId: "user-1",
@@ -368,7 +368,7 @@ test("handleStopCommand passes workspaceRoot through to runtime cancellation", a
     },
   };
 
-  await CyberbossApp.prototype.handleStopCommand.call(appLike, {
+  await DawnApp.prototype.handleStopCommand.call(appLike, {
     workspaceId: "default",
     accountId: "account-1",
     senderId: "user-1",
@@ -419,7 +419,7 @@ test("handleStopCommand allows stopping while waiting for approval", async () =>
     },
   };
 
-  await CyberbossApp.prototype.handleStopCommand.call(appLike, {
+  await DawnApp.prototype.handleStopCommand.call(appLike, {
     workspaceId: "default",
     accountId: "account-1",
     senderId: "user-1",
@@ -472,7 +472,7 @@ test("handleRuntimeEvent reports compact completion back to WeChat", async () =>
     },
   };
 
-  await CyberbossApp.prototype.handleRuntimeEvent.call(appLike, {
+  await DawnApp.prototype.handleRuntimeEvent.call(appLike, {
     type: "runtime.turn.completed",
     payload: {
       threadId: "thread-1",
@@ -513,7 +513,7 @@ test("handleRuntimeEvent auto-approves built-in view_image approvals without pro
     },
   };
 
-  await CyberbossApp.prototype.handleRuntimeEvent.call(appLike, {
+  await DawnApp.prototype.handleRuntimeEvent.call(appLike, {
     type: "runtime.approval.requested",
     payload: {
       threadId: "thread-1",
@@ -528,7 +528,7 @@ test("handleRuntimeEvent auto-approves built-in view_image approvals without pro
 test("handleRuntimeEvent auto-approves project-native MCP tool approvals without prompting", async () => {
   const responses = [];
   const appLike = {
-    config: { stateDir: path.join(os.tmpdir(), "cyberboss-approval-test") },
+    config: { stateDir: path.join(os.tmpdir(), "dawn-approval-test") },
     streamDelivery: {
       async handleRuntimeEvent() {},
     },
@@ -556,12 +556,12 @@ test("handleRuntimeEvent auto-approves project-native MCP tool approvals without
     },
   };
 
-  await CyberbossApp.prototype.handleRuntimeEvent.call(appLike, {
+  await DawnApp.prototype.handleRuntimeEvent.call(appLike, {
     type: "runtime.approval.requested",
     payload: {
       threadId: "thread-1",
       requestId: "req-project-tool",
-      commandTokens: ["mcp_tool", "cyberboss_tools", "cyberboss_timeline_write"],
+      commandTokens: ["mcp_tool", "dawn_tools", "dawn_timeline_write"],
     },
   });
 
@@ -570,7 +570,7 @@ test("handleRuntimeEvent auto-approves project-native MCP tool approvals without
 
 test("handleRuntimeEvent auto-approves inbox image reads for claudecode without prompting", async () => {
   const responses = [];
-  const stateDir = path.join(os.tmpdir(), "cyberboss-approval-test");
+  const stateDir = path.join(os.tmpdir(), "dawn-approval-test");
   const appLike = {
     config: { stateDir },
     streamDelivery: {
@@ -600,7 +600,7 @@ test("handleRuntimeEvent auto-approves inbox image reads for claudecode without 
     },
   };
 
-  await CyberbossApp.prototype.handleRuntimeEvent.call(appLike, {
+  await DawnApp.prototype.handleRuntimeEvent.call(appLike, {
     type: "runtime.approval.requested",
     payload: {
       threadId: "thread-1",
@@ -615,7 +615,7 @@ test("handleRuntimeEvent auto-approves inbox image reads for claudecode without 
 
 test("handleRuntimeEvent auto-approves any state-dir file operation without prompting", async () => {
   const responses = [];
-  const stateDir = path.join(os.tmpdir(), "cyberboss-approval-test");
+  const stateDir = path.join(os.tmpdir(), "dawn-approval-test");
   const appLike = {
     config: { stateDir },
     streamDelivery: {
@@ -645,7 +645,7 @@ test("handleRuntimeEvent auto-approves any state-dir file operation without prom
     },
   };
 
-  await CyberbossApp.prototype.handleRuntimeEvent.call(appLike, {
+  await DawnApp.prototype.handleRuntimeEvent.call(appLike, {
     type: "runtime.approval.requested",
     payload: {
       threadId: "thread-1",
@@ -654,7 +654,7 @@ test("handleRuntimeEvent auto-approves any state-dir file operation without prom
       filePaths: [path.join(stateDir, "notes", "today.md")],
       commandTokens: [],
       reason: "Tool: Write",
-      command: "Write\nfile_path: \"/tmp/cyberboss-approval-test/notes/today.md\"",
+      command: "Write\nfile_path: \"/tmp/dawn-approval-test/notes/today.md\"",
     },
   });
 
@@ -664,7 +664,7 @@ test("handleRuntimeEvent auto-approves any state-dir file operation without prom
 test("handleRuntimeEvent still prompts for non-inbox image reads", async () => {
   const responses = [];
   const prompts = [];
-  const stateDir = path.join(os.tmpdir(), "cyberboss-approval-test");
+  const stateDir = path.join(os.tmpdir(), "dawn-approval-test");
   const appLike = {
     config: { stateDir },
     streamDelivery: {
@@ -698,7 +698,7 @@ test("handleRuntimeEvent still prompts for non-inbox image reads", async () => {
     },
   };
 
-  await CyberbossApp.prototype.handleRuntimeEvent.call(appLike, {
+  await DawnApp.prototype.handleRuntimeEvent.call(appLike, {
     type: "runtime.approval.requested",
     payload: {
       threadId: "thread-1",
@@ -744,7 +744,7 @@ test("handleRuntimeEvent auto-approves allowlisted prefixes for claudecode appro
     },
   };
 
-  await CyberbossApp.prototype.handleRuntimeEvent.call(appLike, {
+  await DawnApp.prototype.handleRuntimeEvent.call(appLike, {
     type: "runtime.approval.requested",
     payload: {
       threadId: "thread-1",
@@ -770,7 +770,7 @@ test("handleRuntimeEvent auto-approves allowlisted MCP tool approvals", async ()
             return { bindingKey: "binding-1", workspaceRoot: "/workspace" };
           },
           getApprovalCommandAllowlistForWorkspace() {
-            return [["mcp_tool", "cyberboss_tools", "cyberboss_timeline_write"]];
+            return [["mcp_tool", "dawn_tools", "dawn_timeline_write"]];
           },
         };
       },
@@ -786,12 +786,12 @@ test("handleRuntimeEvent auto-approves allowlisted MCP tool approvals", async ()
     },
   };
 
-  await CyberbossApp.prototype.handleRuntimeEvent.call(appLike, {
+  await DawnApp.prototype.handleRuntimeEvent.call(appLike, {
     type: "runtime.approval.requested",
     payload: {
       threadId: "thread-1",
       requestId: "req-mcp-allow",
-      commandTokens: ["mcp_tool", "cyberboss_tools", "cyberboss_timeline_write"],
+      commandTokens: ["mcp_tool", "dawn_tools", "dawn_timeline_write"],
     },
   });
 
@@ -833,7 +833,7 @@ test("handleSwitchCommand stores the actual claudecode thread returned by runtim
     },
   };
 
-  await CyberbossApp.prototype.handleSwitchCommand.call(appLike, {
+  await DawnApp.prototype.handleSwitchCommand.call(appLike, {
     workspaceId: "default",
     accountId: "account-1",
     senderId: "user-1",
@@ -853,7 +853,7 @@ test("handleSwitchCommand stores the actual claudecode thread returned by runtim
 test("session store does not reuse legacy thread ids across runtimes", () => {
   const sessionsFile = path.join(
     os.tmpdir(),
-    `cyberboss-session-store-${Date.now()}-${Math.random().toString(16).slice(2)}.json`
+    `dawn-session-store-${Date.now()}-${Math.random().toString(16).slice(2)}.json`
   );
   fs.writeFileSync(sessionsFile, JSON.stringify({
     bindings: {
@@ -876,7 +876,7 @@ test("session store does not reuse legacy thread ids across runtimes", () => {
 test("codex session store reads runtime-scoped thread ids", () => {
   const sessionsFile = path.join(
     os.tmpdir(),
-    `cyberboss-codex-runtime-scoped-${Date.now()}-${Math.random().toString(16).slice(2)}.json`
+    `dawn-codex-runtime-scoped-${Date.now()}-${Math.random().toString(16).slice(2)}.json`
   );
   fs.writeFileSync(sessionsFile, JSON.stringify({
     bindings: {
@@ -904,7 +904,7 @@ test("codex session store reads runtime-scoped thread ids", () => {
 test("codex session store does not reuse legacy thread ids without runtime-scoped binding", () => {
   const sessionsFile = path.join(
     os.tmpdir(),
-    `cyberboss-codex-thread-store-${Date.now()}-${Math.random().toString(16).slice(2)}.json`
+    `dawn-codex-thread-store-${Date.now()}-${Math.random().toString(16).slice(2)}.json`
   );
   fs.writeFileSync(sessionsFile, JSON.stringify({
     bindings: {
@@ -927,7 +927,7 @@ test("codex session store does not reuse legacy thread ids without runtime-scope
 test("claudecode session store keeps pending thread targets runtime-scoped", () => {
   const sessionsFile = path.join(
     os.tmpdir(),
-    `cyberboss-pending-thread-store-${Date.now()}-${Math.random().toString(16).slice(2)}.json`
+    `dawn-pending-thread-store-${Date.now()}-${Math.random().toString(16).slice(2)}.json`
   );
   const claudecodeStore = new SessionStore({ filePath: sessionsFile, runtimeId: "claudecode" });
   claudecodeStore.setPendingThreadIdForWorkspace("binding-1", "/workspace", "claude-target");
@@ -985,14 +985,14 @@ test("handleStatusCommand asks to configure claudecode context window before sho
     },
   };
 
-  await CyberbossApp.prototype.handleStatusCommand.call(appLike, {
+  await DawnApp.prototype.handleStatusCommand.call(appLike, {
     workspaceId: "default",
     accountId: "account-1",
     senderId: "user-1",
     contextToken: "ctx-1",
   });
 
-  assert.match(sent[0], /📦 context: set CYBERBOSS_CLAUDE_CONTEXT_WINDOW/);
+  assert.match(sent[0], /📦 context: set DAWN_CLAUDE_CONTEXT_WINDOW/);
 });
 
 test("handleStatusCommand shows approximate context details for claudecode when configured", async () => {
@@ -1047,7 +1047,7 @@ test("handleStatusCommand shows approximate context details for claudecode when 
     },
   };
 
-  await CyberbossApp.prototype.handleStatusCommand.call(appLike, {
+  await DawnApp.prototype.handleStatusCommand.call(appLike, {
     workspaceId: "default",
     accountId: "account-1",
     senderId: "user-1",
@@ -1109,7 +1109,7 @@ test("handleStatusCommand asks to reduce claudecode max output tokens when reser
     },
   };
 
-  await CyberbossApp.prototype.handleStatusCommand.call(appLike, {
+  await DawnApp.prototype.handleStatusCommand.call(appLike, {
     workspaceId: "default",
     accountId: "account-1",
     senderId: "user-1",
@@ -1166,7 +1166,7 @@ test("handleStatusCommand shows codex context details", async () => {
     },
   };
 
-  await CyberbossApp.prototype.handleStatusCommand.call(appLike, {
+  await DawnApp.prototype.handleStatusCommand.call(appLike, {
     workspaceId: "default",
     accountId: "account-1",
     senderId: "user-1",
@@ -1219,7 +1219,7 @@ test("handleStatusCommand shows codex context as unavailable when no context dat
     },
   };
 
-  await CyberbossApp.prototype.handleStatusCommand.call(appLike, {
+  await DawnApp.prototype.handleStatusCommand.call(appLike, {
     workspaceId: "default",
     accountId: "account-1",
     senderId: "user-1",

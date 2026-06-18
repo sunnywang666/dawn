@@ -1,4 +1,4 @@
-const test = require("node:test");
+﻿const test = require("node:test");
 const assert = require("node:assert/strict");
 
 const { ProjectToolHost } = require("../src/tools/tool-host");
@@ -199,7 +199,7 @@ function createHost() {
 test("tool host rejects legacy timeline write CLI-shaped fields", async () => {
   const host = createHost();
   await assert.rejects(async () => {
-    await host.invokeTool("cyberboss_timeline_write", {
+    await host.invokeTool("dawn_timeline_write", {
       date: "2026-04-21",
       events: [],
       eventsJson: "{\"events\":[]}",
@@ -209,11 +209,11 @@ test("tool host rejects legacy timeline write CLI-shaped fields", async () => {
 
 test("tool host exposes structured timeline read tools", async () => {
   const host = createHost();
-  const readResult = await host.invokeTool("cyberboss_timeline_read", {
+  const readResult = await host.invokeTool("dawn_timeline_read", {
     date: "2026-04-21",
   }, {});
-  const categoriesResult = await host.invokeTool("cyberboss_timeline_categories", {}, {});
-  const proposalsResult = await host.invokeTool("cyberboss_timeline_proposals", {
+  const categoriesResult = await host.invokeTool("dawn_timeline_categories", {}, {});
+  const proposalsResult = await host.invokeTool("dawn_timeline_proposals", {
     date: "2026-04-21",
   }, {});
 
@@ -225,7 +225,7 @@ test("tool host exposes structured timeline read tools", async () => {
 test("tool host validates structured reminder input types", async () => {
   const host = createHost();
   await assert.rejects(async () => {
-    await host.invokeTool("cyberboss_reminder_create", {
+    await host.invokeTool("dawn_reminder_create", {
       text: "ping me",
       delayMinutes: "30",
     }, {});
@@ -234,32 +234,32 @@ test("tool host validates structured reminder input types", async () => {
 
 test("tool host exposes sticker tools with compact structured outputs", async () => {
   const host = createHost();
-  const tagsResult = await host.invokeTool("cyberboss_sticker_tags", {}, {});
-  const pickResult = await host.invokeTool("cyberboss_sticker_pick", {
+  const tagsResult = await host.invokeTool("dawn_sticker_tags", {}, {});
+  const pickResult = await host.invokeTool("dawn_sticker_pick", {
     tag: "可爱",
     limit: 3,
   }, {});
-  const sendResult = await host.invokeTool("cyberboss_sticker_send", {
+  const sendResult = await host.invokeTool("dawn_sticker_send", {
     stickerId: "stk_001",
   }, {});
-  const deleteResult = await host.invokeTool("cyberboss_sticker_delete", {
+  const deleteResult = await host.invokeTool("dawn_sticker_delete", {
     items: [{ stickerId: "stk_001" }],
   }, {});
-  const saveResult = await host.invokeTool("cyberboss_sticker_save_from_inbox", {
+  const saveResult = await host.invokeTool("dawn_sticker_save_from_inbox", {
     items: [{
       filePath: "/tmp/inbox/cat.png",
       tags: ["可爱"],
       desc: "小猫歪头卖萌",
     }],
   }, {});
-  const duplicateSaveResult = await host.invokeTool("cyberboss_sticker_save_from_inbox", {
+  const duplicateSaveResult = await host.invokeTool("dawn_sticker_save_from_inbox", {
     items: [{
       filePath: "/tmp/inbox/cat.png",
       tags: ["可爱"],
       desc: "重复",
     }],
   }, {});
-  const updateResult = await host.invokeTool("cyberboss_sticker_update", {
+  const updateResult = await host.invokeTool("dawn_sticker_update", {
     items: [{
       stickerId: "stk_001",
       tags: ["可爱", "新标签"],
@@ -280,7 +280,7 @@ test("tool host exposes sticker tools with compact structured outputs", async ()
 
 test("tool host accepts structured timeline screenshot input", async () => {
   const host = createHost();
-  const result = await host.invokeTool("cyberboss_timeline_screenshot", {
+  const result = await host.invokeTool("dawn_timeline_screenshot", {
     selector: "timeline",
     range: "day",
     date: "2026-04-21",
@@ -292,7 +292,7 @@ test("tool host accepts structured timeline screenshot input", async () => {
 
 test("tool host descriptions include schema summary for models that only surface descriptions", () => {
   const host = createHost();
-  const timelineWrite = host.listTools().find((tool) => tool.name === "cyberboss_timeline_write");
+  const timelineWrite = host.listTools().find((tool) => tool.name === "dawn_timeline_write");
   assert.match(timelineWrite.description, /Input:/);
   assert.match(timelineWrite.description, /date: string/);
   assert.match(timelineWrite.description, /events: \{/);
@@ -323,7 +323,7 @@ test("tool host exposes whereabouts tools from the external dependency", async (
 test("tool host rejects timeline events without title or eventNodeId", async () => {
   const host = createHost();
   await assert.rejects(async () => {
-    await host.invokeTool("cyberboss_timeline_write", {
+    await host.invokeTool("dawn_timeline_write", {
       date: "2026-04-22",
       events: [
         {

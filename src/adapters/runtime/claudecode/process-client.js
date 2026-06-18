@@ -1,3 +1,4 @@
+const fs = require("fs/promises");
 const { spawn } = require("child_process");
 
 class ClaudeCodeProcessClient {
@@ -235,7 +236,7 @@ class ClaudeCodeProcessClient {
     }, raw);
   }
 
-  async sendUserMessage({ text, threadId }) {
+  async sendUserMessage({ text, attachments = [], threadId }) {
     if (!this.alive || !this.stdin) {
       throw new Error("claudecode process not running");
     }
@@ -248,9 +249,13 @@ class ClaudeCodeProcessClient {
         text,
       });
     }
+    const imageBlocks = await buildImageBlocks(attachments);
+    const content = imageBlocks.length
+      ? [...imageBlocks, { type: "text", text }]
+      : text;
     const payload = JSON.stringify({
       type: "user",
-      message: { role: "user", content: text },
+      message: { role: "user", content },
     });
     this.stdin.write(payload + "\n");
     this.emit({
@@ -398,6 +403,28 @@ const SENSITIVE_PATTERNS = /\b(?:sk-[a-zA-Z0-9]{20,}|Bearer\s+[a-zA-Z0-9_\-]{20,
 
 function isPotentiallySensitive(text) {
   return SENSITIVE_KEYWORDS.test(text) || SENSITIVE_PATTERNS.test(text);
+}
+
+async function buildImageBlocks(attachments) {
+  if (!Array.isArray(attachments) || !attachments.length) {
+    return [];
+  }
+  const blocks = [];
+  for (const att of attachments) {
+    const path = typeof att?.absolutePath === "string" ? att.absolutePath.trim() : "";
+    if (!path) continue;
+    try {
+      const data = await fs.readFile(path);
+      const mediaType = (typeof att?.contentType === "string" && att.contentType.trim()) || "image/jpeg";
+      blocks.push({
+        type: "image",
+        source: { type: "base64", media_type: mediaType, data: data.toString("base64") },
+      });
+    } catch {
+      // skip unreadable files
+    }
+  }
+  return blocks;
 }
 
 module.exports = { ClaudeCodeProcessClient };

@@ -1,4 +1,4 @@
-const test = require("node:test");
+﻿const test = require("node:test");
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const os = require("node:os");
@@ -171,7 +171,7 @@ test("codex adapter lets configured env model override stored session model", as
   };
 
   try {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "cyberboss-codex-env-model-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "dawn-codex-env-model-"));
     const sessionsFile = path.join(tempDir, "sessions.json");
     const workspaceRoot = path.join(tempDir, "workspace");
     fs.mkdirSync(workspaceRoot);
@@ -282,7 +282,7 @@ test("codex adapter lets configured env model override stored session model", as
 });
 
 test("codex adapter enables native image input from model metadata or explicit override", async () => {
-  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "cyberboss-codex-image-cap-"));
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "dawn-codex-image-cap-"));
   const sessionsFile = path.join(tempDir, "sessions.json");
   const indexPath = path.resolve(__dirname, "../src/adapters/runtime/codex/index.js");
   delete require.cache[indexPath];

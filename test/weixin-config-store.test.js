@@ -1,4 +1,4 @@
-const test = require("node:test");
+﻿const test = require("node:test");
 const assert = require("node:assert/strict");
 const fs = require("fs");
 const os = require("os");
@@ -11,7 +11,7 @@ const {
 } = require("../src/adapters/channel/weixin/config-store");
 
 function createConfig(overrides = {}) {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "cyberboss-weixin-config-test-"));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "dawn-weixin-config-test-"));
   return {
     weixinConfigFile: path.join(dir, "weixin-config.json"),
     ...overrides,

@@ -1,4 +1,4 @@
-const test = require("node:test");
+﻿const test = require("node:test");
 const assert = require("node:assert/strict");
 const path = require("node:path");
 
@@ -38,7 +38,7 @@ test("codex rpc client sends image attachments as local images", async () => {
     threadId: "thread-1",
     text: "what is this image?",
     attachments: [{
-      absolutePath: path.join("/tmp", "cyberboss image.jpg"),
+      absolutePath: path.join("/tmp", "dawn image.jpg"),
       contentType: "image/jpeg",
     }],
   });
@@ -48,7 +48,7 @@ test("codex rpc client sends image attachments as local images", async () => {
     { type: "text", text: "what is this image?" },
     {
       type: "localImage",
-      path: "/tmp/cyberboss image.jpg",
+      path: "/tmp/dawn image.jpg",
     },
   ]);
 });

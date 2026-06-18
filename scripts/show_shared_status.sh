@@ -1,9 +1,9 @@
-#!/bin/zsh
+﻿#!/bin/zsh
 set -euo pipefail
 
-PORT="${CYBERBOSS_SHARED_PORT:-8765}"
+PORT="${DAWN_SHARED_PORT:-8765}"
 LISTEN_URL="ws://127.0.0.1:${PORT}"
-STATE_DIR="${CYBERBOSS_STATE_DIR:-$HOME/.cyberboss}"
+STATE_DIR="${DAWN_STATE_DIR:-$HOME/.exclusive-dawn}"
 LOG_DIR="${STATE_DIR}/logs"
 APP_SERVER_PID_FILE="${LOG_DIR}/shared-app-server.pid"
 WECHAT_PID_FILE="${LOG_DIR}/shared-wechat.pid"
@@ -29,7 +29,7 @@ function print_pid_state() {
 
 echo "listen=${LISTEN_URL}"
 print_pid_state "shared_app_server_pid" "${APP_SERVER_PID_FILE}"
-print_pid_state "shared_cyberboss_pid" "${WECHAT_PID_FILE}"
+print_pid_state "shared_bridge_pid" "${WECHAT_PID_FILE}"
 
 if command -v curl >/dev/null 2>&1; then
   if curl -sf "http://127.0.0.1:${PORT}/readyz" >/dev/null; then

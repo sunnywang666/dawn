@@ -309,7 +309,7 @@ function resolveScreenshotOutputFile(config, outputFile = "") {
     "-",
     String(now.getMilliseconds()).padStart(3, "0"),
   ].join("");
-  return path.join(shotsDir, `cyberboss-timeline-${stamp}.png`);
+  return path.join(shotsDir, `dawn-timeline-${stamp}.png`);
 }
 
 function normalizePositiveInteger(value) {

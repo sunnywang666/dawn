@@ -1,13 +1,13 @@
-const test = require("node:test");
+﻿const test = require("node:test");
 const assert = require("node:assert/strict");
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
 
-const { CyberbossApp } = require("../src/core/app");
+const { DawnApp } = require("../src/core/app");
 
 test("system messages bypass normal inbound wrapping", async () => {
-  const prepared = await CyberbossApp.prototype.prepareIncomingMessageForRuntime.call({}, {
+  const prepared = await DawnApp.prototype.prepareIncomingMessageForRuntime.call({}, {
     provider: "system",
     text: "SYSTEM ACTION MODE\n\nTrigger:\n测试 system send 命令",
     attachments: [],
@@ -23,7 +23,7 @@ test("system messages bypass normal inbound wrapping", async () => {
 });
 
 test("image attachments stay as inbound drafts before runtime turn assembly", async () => {
-  const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "cyberboss-inbound-test-"));
+  const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "dawn-inbound-test-"));
   const originalFetch = global.fetch;
   global.fetch = async () => ({
     ok: true,
@@ -38,7 +38,7 @@ test("image attachments stay as inbound drafts before runtime turn assembly", as
   });
 
   try {
-    const prepared = await CyberbossApp.prototype.prepareIncomingMessageForRuntime.call({
+    const prepared = await DawnApp.prototype.prepareIncomingMessageForRuntime.call({
       config: {
         stateDir,
         weixinCdnBaseUrl: "https://cdn.example.com",
@@ -71,7 +71,7 @@ test("image attachments stay as inbound drafts before runtime turn assembly", as
     assert.equal(prepared.attachments[0].contentType, "image/jpeg");
     assert.equal(prepared.attachments[0].isImage, true);
 
-    const runtimeTurn = await CyberbossApp.prototype.buildRuntimeTurn.call({
+    const runtimeTurn = await DawnApp.prototype.buildRuntimeTurn.call({
       config: {
         userName: "User",
       },
@@ -83,9 +83,9 @@ test("image attachments stay as inbound drafts before runtime turn assembly", as
     }, { prepared, model: "" });
     assert.match(runtimeTurn.text, /Saved attachments:/i);
     assert.match(runtimeTurn.text, /vision caption provider is not configured/i);
-    assert.match(runtimeTurn.text, /cyberboss_sticker_save_from_inbox/i);
+    assert.match(runtimeTurn.text, /dawn_sticker_save_from_inbox/i);
     assert.match(runtimeTurn.text, /`items` array/i);
-    assert.match(runtimeTurn.text, /cyberboss_sticker_tags/i);
+    assert.match(runtimeTurn.text, /dawn_sticker_tags/i);
     assert.match(runtimeTurn.text, /short new tag/i);
     assert.match(runtimeTurn.text, /Do not describe save steps/i);
     assert.doesNotMatch(runtimeTurn.text, /view_image/i);
@@ -96,7 +96,7 @@ test("image attachments stay as inbound drafts before runtime turn assembly", as
 });
 
 test("image prompt assembly is runtime-neutral for claudecode drafts", async () => {
-  const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "cyberboss-inbound-test-"));
+  const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "dawn-inbound-test-"));
   const originalFetch = global.fetch;
   global.fetch = async () => ({
     ok: true,
@@ -111,7 +111,7 @@ test("image prompt assembly is runtime-neutral for claudecode drafts", async () 
   });
 
   try {
-    const prepared = await CyberbossApp.prototype.prepareIncomingMessageForRuntime.call({
+    const prepared = await DawnApp.prototype.prepareIncomingMessageForRuntime.call({
       config: {
         stateDir,
         weixinCdnBaseUrl: "https://cdn.example.com",
@@ -139,7 +139,7 @@ test("image prompt assembly is runtime-neutral for claudecode drafts", async () 
       receivedAt: "2026-04-17T10:00:00.000Z",
     }, "/workspace");
 
-    const runtimeTurn = await CyberbossApp.prototype.buildRuntimeTurn.call({
+    const runtimeTurn = await DawnApp.prototype.buildRuntimeTurn.call({
       config: {
         userName: "User",
       },
@@ -151,9 +151,9 @@ test("image prompt assembly is runtime-neutral for claudecode drafts", async () 
     }, { prepared, model: "" });
 
     assert.match(runtimeTurn.text, /Saved attachments:/i);
-    assert.match(runtimeTurn.text, /cyberboss_sticker_save_from_inbox/i);
+    assert.match(runtimeTurn.text, /dawn_sticker_save_from_inbox/i);
     assert.match(runtimeTurn.text, /`items` array/i);
-    assert.match(runtimeTurn.text, /cyberboss_sticker_tags/i);
+    assert.match(runtimeTurn.text, /dawn_sticker_tags/i);
     assert.match(runtimeTurn.text, /short new tag/i);
     assert.match(runtimeTurn.text, /Do not describe save steps/i);
     assert.doesNotMatch(runtimeTurn.text, /Read every image first/i);
@@ -166,7 +166,7 @@ test("image prompt assembly is runtime-neutral for claudecode drafts", async () 
 });
 
 test("text-only runtimes receive vision API captions as visual context", async () => {
-  const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "cyberboss-vision-test-"));
+  const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "dawn-vision-test-"));
   const imagePath = path.join(stateDir, "photo.jpg");
   fs.writeFileSync(imagePath, Buffer.from("fake-jpeg-bytes"));
   const originalFetch = global.fetch;
@@ -191,7 +191,7 @@ test("text-only runtimes receive vision API captions as visual context", async (
   };
 
   try {
-    const runtimeTurn = await CyberbossApp.prototype.buildRuntimeTurn.call({
+    const runtimeTurn = await DawnApp.prototype.buildRuntimeTurn.call({
       config: {
         visionMode: "auto",
         visionProvider: "openai-compatible",
@@ -222,7 +222,7 @@ test("text-only runtimes receive vision API captions as visual context", async (
 
     assert.match(runtimeTurn.text, /Visual context from attachments:/i);
     assert.match(runtimeTurn.text, /一杯带拉花的咖啡/);
-    assert.match(runtimeTurn.text, /cyberboss_sticker_save_from_inbox/i);
+    assert.match(runtimeTurn.text, /dawn_sticker_save_from_inbox/i);
     assert.deepEqual(runtimeTurn.attachments, []);
     assert.equal(runtimeTurn.visionContext.route, "caption");
   } finally {
@@ -237,7 +237,7 @@ test("native image-capable runtimes receive attachments without caption fallback
     isImage: true,
     absolutePath: "/tmp/native.jpg",
   };
-  const runtimeTurn = await CyberbossApp.prototype.buildRuntimeTurn.call({
+  const runtimeTurn = await DawnApp.prototype.buildRuntimeTurn.call({
     config: {
       visionMode: "auto",
     },
@@ -267,7 +267,7 @@ test("native image-capable runtimes receive attachments without caption fallback
 test("image-only inbound turns enter the dedicated debounce queue", async () => {
   const queued = [];
   let routed = 0;
-  await CyberbossApp.prototype.handlePreparedMessage.call({
+  await DawnApp.prototype.handlePreparedMessage.call({
     runtimeAdapter: {
       getSessionStore() {
         return {
@@ -376,14 +376,14 @@ test("debounced image batches merge with a trailing text message into one prepar
         return { id: "codex" };
       },
     },
-    clearPendingImageInboundTimer: CyberbossApp.prototype.clearPendingImageInboundTimer,
+    clearPendingImageInboundTimer: DawnApp.prototype.clearPendingImageInboundTimer,
     async routePreparedInbound({ prepared }) {
       routed = prepared;
       return true;
     },
   };
 
-  await CyberbossApp.prototype.flushPendingImageInboundBatch.call(app, {
+  await DawnApp.prototype.flushPendingImageInboundBatch.call(app, {
     bindingKey: "binding-1",
     workspaceRoot: "/workspace",
     trailingPrepared: {
@@ -452,11 +452,11 @@ test("debounced image batches still hand off to the normal pending buffer when t
     async dispatchPreparedTurn() {
       throw new Error("should not dispatch while blocked");
     },
-    clearPendingImageInboundTimer: CyberbossApp.prototype.clearPendingImageInboundTimer,
-    routePreparedInbound: CyberbossApp.prototype.routePreparedInbound,
+    clearPendingImageInboundTimer: DawnApp.prototype.clearPendingImageInboundTimer,
+    routePreparedInbound: DawnApp.prototype.routePreparedInbound,
   };
 
-  await CyberbossApp.prototype.flushPendingImageInboundBatch.call(app, {
+  await DawnApp.prototype.flushPendingImageInboundBatch.call(app, {
     bindingKey: "binding-1",
     workspaceRoot: "/workspace",
   });
@@ -466,7 +466,7 @@ test("debounced image batches still hand off to the normal pending buffer when t
 });
 
 test("pending image-only inbox messages merge into one clean inbound draft", () => {
-  const merged = CyberbossApp.prototype.mergePendingInboundDraft.call({
+  const merged = DawnApp.prototype.mergePendingInboundDraft.call({
     config: {
       userName: "User",
     },
@@ -521,7 +521,7 @@ test("pending image-only inbox messages merge into one clean inbound draft", () 
 });
 
 test("pending image-only inbox messages are split into batches of 10 attachments", () => {
-  const merged = CyberbossApp.prototype.mergePendingInboundDraft.call({
+  const merged = DawnApp.prototype.mergePendingInboundDraft.call({
     config: {
       userName: "User",
     },
@@ -559,7 +559,7 @@ test("pending image-only inbox messages are split into batches of 10 attachments
 
 test("location arrive_home trigger enqueues a system action message", () => {
   const queued = [];
-  CyberbossApp.prototype.handleLocationAccepted.call({
+  DawnApp.prototype.handleLocationAccepted.call({
     activeAccountId: "wx-account",
     config: {
       allowedUserIds: ["user-1"],
@@ -598,7 +598,7 @@ test("location arrive_home trigger enqueues a system action message", () => {
 
 test("location leave_home trigger and major move both enqueue system action messages", () => {
   const queued = [];
-  CyberbossApp.prototype.handleLocationAccepted.call({
+  DawnApp.prototype.handleLocationAccepted.call({
     activeAccountId: "wx-account",
     config: {
       allowedUserIds: ["user-1"],

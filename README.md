@@ -1,9 +1,9 @@
-<div align="center">
+﻿<div align="center">
 
 [中文](./README.zh-CN.md) · English
 
 # The Overbearing Boss Fell for My ADHD
-## Cyberboss: a WeChat bridge for Codex and Claude Code
+## Dawn: a WeChat bridge for Codex and Claude Code
 
 > "Keep escaping into dopamine if you want. I'll still catch you at the next timestamp."
 
@@ -23,20 +23,20 @@
 </div>
 
 <p align="center">
-  <img src="./docs/images/IMG_0241.PNG" alt="Cyberboss English demo 1" width="31%" />
-  <img src="./docs/images/IMG_0244.PNG" alt="Cyberboss English demo 2" width="31%" />
-  <img src="./docs/images/IMG_0245.PNG" alt="Cyberboss English demo 3" width="31%" />
+  <img src="./docs/images/IMG_0241.PNG" alt="Dawn English demo 1" width="31%" />
+  <img src="./docs/images/IMG_0244.PNG" alt="Dawn English demo 2" width="31%" />
+  <img src="./docs/images/IMG_0245.PNG" alt="Dawn English demo 3" width="31%" />
 </p>
 
-Cyberboss is not another polite productivity timer. It is not a to-do list with better branding either.
+Dawn is not another polite productivity timer. It is not a to-do list with better branding either.
 
 It is an agent bridge that plugs a local coding runtime directly into WeChat and turns it into a time-aware, context-persistent accountability companion. It supports Codex and Claude Code while keeping the same commands and day-to-day behavior. It does not wait for you to "start a session". It watches the flow of your day, notices when you disappear, and decides when to show up again.
 
-## Why Cyberboss?
+## Why Dawn?
 
 For people with ADHD, or anyone who needs strong external accountability, most productivity tools fail for the same reason: they assume you still have enough executive function to remember to use them.
 
-Cyberboss starts from a transfer of control.
+Dawn starts from a transfer of control.
 
 - No manual start button
   It lives inside the chat interface you actually open every day.
@@ -52,7 +52,7 @@ Cyberboss starts from a transfer of control.
 Every inbound WeChat message is stamped with local time before it reaches the runtime. The model is not just reading text. It is reading your day as it unfolds.
 
 2. The Ledger of Life
-Using those timestamps, Cyberboss reconstructs when events start, when they end, and how long they last, then turns fragmented chat into a structured personal timeline.
+Using those timestamps, Dawn reconstructs when events start, when they end, and how long they last, then turns fragmented chat into a structured personal timeline.
 
 3. Stochastic Pulse
 At random intervals, the system wakes the agent up and lets it decide what to do next: send a message, stay silent, write in the diary, update the timeline, or use tools.
@@ -65,13 +65,13 @@ Daily traces can be written to local files without depending on a cloud note ser
 
 ## Timeline also works on its own
 
-If the most interesting part of Cyberboss is the "ledger of life" layer, you can use that separately:
+If the most interesting part of Dawn is the "ledger of life" layer, you can use that separately:
 
 - Project: [WenXiaoWendy/timeline-for-agent](https://github.com/WenXiaoWendy/timeline-for-agent)
 - It is an independent project and does not require the WeChat bridge
 - You can plug it into your own agent, bot, or automation stack even if you do not use Codex
 
-Cyberboss builds on top of `timeline-for-agent`, then adds WeChat, reminders, diary writing, and random check-ins around it.
+Dawn builds on top of `timeline-for-agent`, then adds WeChat, reminders, diary writing, and random check-ins around it.
 
 <a id="technical-stack"></a>
 ## Technical Stack
@@ -89,13 +89,13 @@ Cyberboss builds on top of `timeline-for-agent`, then adds WeChat, reminders, di
 
 ## Why It Exists
 
-Cyberboss is built against the myth that productivity begins with self-control.
+Dawn is built against the myth that productivity begins with self-control.
 
 - Pomodoro assumes you can start on command.
 - To-do apps assume you can keep returning.
 - Reminder apps assume you will still respect them when they fire.
 
-Cyberboss assumes none of that. It treats the user as someone who may drift, disappear, procrastinate, or lose momentum, then moves the regulatory layer outside the user and into an always-on local agent.
+Dawn assumes none of that. It treats the user as someone who may drift, disappear, procrastinate, or lose momentum, then moves the regulatory layer outside the user and into an always-on local agent.
 
 <a id="user-guide"></a>
 ## User Guide
@@ -111,146 +111,146 @@ Cyberboss assumes none of that. It treats the user as someone who may drift, dis
 This project is not published as an npm package. Clone the repo and install inside the project directory:
 
 ```bash
-git clone https://github.com/WenXiaoWendy/cyberboss.git
-cd cyberboss
+git clone https://github.com/WenXiaoWendy/exclusive-dawn.git
+cd exclusive-dawn
 npm install
 ```
 
 ### Configure environment variables before the first command
 
-`Cyberboss` reads environment variables from:
+`Dawn` reads environment variables from:
 
 - `.env` in the current project directory
-- `${HOME}/.cyberboss/.env`
+- `${HOME}/.exclusive-dawn/.env`
 - the current shell environment
 
 Before running the first command, set at least:
 
 ```dotenv
-CYBERBOSS_USER_NAME=YourName
-CYBERBOSS_USER_GENDER=female
-CYBERBOSS_ALLOWED_USER_IDS=your_wechat_user_id
-CYBERBOSS_WORKSPACE_ROOT=/absolute/path/to/your/project
+DAWN_USER_NAME=YourName
+DAWN_USER_GENDER=female
+DAWN_ALLOWED_USER_IDS=your_wechat_user_id
+DAWN_WORKSPACE_ROOT=/absolute/path/to/your/project
 ```
 
 Common optional variables:
 
 ```dotenv
-CYBERBOSS_RUNTIME=codex
-CYBERBOSS_CODEX_ENDPOINT=ws://127.0.0.1:8765
-CYBERBOSS_CODEX_COMMAND=
-CYBERBOSS_CODEX_MODEL=
-CYBERBOSS_CODEX_MODEL_PROVIDER=
-CYBERBOSS_CODEX_NATIVE_IMAGE_INPUT=
-CYBERBOSS_CLAUDE_COMMAND=claude
-CYBERBOSS_CLAUDE_MODEL=
-CYBERBOSS_CLAUDE_CONTEXT_WINDOW=
-CYBERBOSS_CLAUDE_PERMISSION_MODE=default
-CYBERBOSS_CLAUDE_DISABLE_VERBOSE=false
-CYBERBOSS_CLAUDE_EXTRA_ARGS=
+DAWN_RUNTIME=codex
+DAWN_CODEX_ENDPOINT=ws://127.0.0.1:8765
+DAWN_CODEX_COMMAND=
+DAWN_CODEX_MODEL=
+DAWN_CODEX_MODEL_PROVIDER=
+DAWN_CODEX_NATIVE_IMAGE_INPUT=
+DAWN_CLAUDE_COMMAND=claude
+DAWN_CLAUDE_MODEL=
+DAWN_CLAUDE_CONTEXT_WINDOW=
+DAWN_CLAUDE_PERMISSION_MODE=default
+DAWN_CLAUDE_DISABLE_VERBOSE=false
+DAWN_CLAUDE_EXTRA_ARGS=
 CLAUDE_CODE_MAX_OUTPUT_TOKENS=
-CYBERBOSS_VISION_MODE=auto
-CYBERBOSS_VISION_PROVIDER=openai-compatible
-CYBERBOSS_VISION_API_BASE_URL=
-CYBERBOSS_VISION_API_KEY=
-CYBERBOSS_VISION_MODEL=
-CYBERBOSS_VISION_TIMEOUT_MS=30000
-CYBERBOSS_ACCOUNT_ID=
-CYBERBOSS_WEIXIN_MIN_CHUNK_CHARS=20
-CYBERBOSS_WEIXIN_BASE_URL=https://ilinkai.weixin.qq.com
-CYBERBOSS_WEIXIN_CDN_BASE_URL=https://novac2c.cdn.weixin.qq.com/c2c
-CYBERBOSS_WEIXIN_QR_BOT_TYPE=3
-CYBERBOSS_ENABLE_LOCATION_SERVER=false
-CYBERBOSS_LOCATION_HOST=0.0.0.0
-CYBERBOSS_LOCATION_PORT=4318
-CYBERBOSS_LOCATION_TOKEN=
-CYBERBOSS_LOCATION_HOME_CENTER=
-CYBERBOSS_LOCATION_WORK_CENTER=
-CYBERBOSS_LOCATION_KNOWN_PLACES=
-CYBERBOSS_LOCATION_PLACE_RADIUS_METERS=150
-CYBERBOSS_LOCATION_BATTERY_HISTORY_LIMIT=100
+DAWN_VISION_MODE=auto
+DAWN_VISION_PROVIDER=openai-compatible
+DAWN_VISION_API_BASE_URL=
+DAWN_VISION_API_KEY=
+DAWN_VISION_MODEL=
+DAWN_VISION_TIMEOUT_MS=30000
+DAWN_ACCOUNT_ID=
+DAWN_WEIXIN_MIN_CHUNK_CHARS=20
+DAWN_WEIXIN_BASE_URL=https://ilinkai.weixin.qq.com
+DAWN_WEIXIN_CDN_BASE_URL=https://novac2c.cdn.weixin.qq.com/c2c
+DAWN_WEIXIN_QR_BOT_TYPE=3
+DAWN_ENABLE_LOCATION_SERVER=false
+DAWN_LOCATION_HOST=0.0.0.0
+DAWN_LOCATION_PORT=4318
+DAWN_LOCATION_TOKEN=
+DAWN_LOCATION_HOME_CENTER=
+DAWN_LOCATION_WORK_CENTER=
+DAWN_LOCATION_KNOWN_PLACES=
+DAWN_LOCATION_PLACE_RADIUS_METERS=150
+DAWN_LOCATION_BATTERY_HISTORY_LIMIT=100
 ```
 
 What these do:
 
-- `CYBERBOSS_RUNTIME`
+- `DAWN_RUNTIME`
   Choose `codex` or `claudecode`. The command set stays the same.
-- `CYBERBOSS_CODEX_ENDPOINT`
+- `DAWN_CODEX_ENDPOINT`
   Reuse an existing shared Codex app-server instead of spawning a private runtime.
-- `CYBERBOSS_CODEX_COMMAND`
+- `DAWN_CODEX_COMMAND`
   Override the Codex launcher when `codex` is not directly on your `PATH`.
-- `CYBERBOSS_CODEX_MODEL`
+- `DAWN_CODEX_MODEL`
   Force Codex turns to use a specific model. Leave empty to use Codex's default model selection.
-- `CYBERBOSS_CODEX_MODEL_PROVIDER`
+- `DAWN_CODEX_MODEL_PROVIDER`
   Force Codex turns to use a specific provider, such as `ollama` for local models. Leave empty for the default cloud provider.
-- `CYBERBOSS_CODEX_NATIVE_IMAGE_INPUT`
+- `DAWN_CODEX_NATIVE_IMAGE_INPUT`
   Optional override for direct image input through the Codex app-server path. Leave empty to infer from model metadata; set `true` to test a local multimodal model directly, or `false` to force caption fallback.
-- `CYBERBOSS_CLAUDE_COMMAND`
+- `DAWN_CLAUDE_COMMAND`
   Override the Claude launcher. Default is `claude`.
-- `CYBERBOSS_CLAUDE_MODEL`
+- `DAWN_CLAUDE_MODEL`
   Set the default Claude model.
-- `CYBERBOSS_CLAUDE_CONTEXT_WINDOW`
+- `DAWN_CLAUDE_CONTEXT_WINDOW`
   Set Claude's effective context window so `/status` can show an approximate context usage line.
-- `CYBERBOSS_CLAUDE_PERMISSION_MODE`
+- `DAWN_CLAUDE_PERMISSION_MODE`
   Set Claude's permission mode before the bridge starts.
-- `CYBERBOSS_CLAUDE_DISABLE_VERBOSE`
+- `DAWN_CLAUDE_DISABLE_VERBOSE`
   Disable verbose Claude terminal output.
-- `CYBERBOSS_CLAUDE_EXTRA_ARGS`
+- `DAWN_CLAUDE_EXTRA_ARGS`
   Append extra Claude CLI arguments as a comma-separated list.
 - `CLAUDE_CODE_MAX_OUTPUT_TOKENS`
   Reserve output tokens for Claude replies. `/status` subtracts this reserve from the configured Claude context window.
-- `CYBERBOSS_VISION_MODE`
+- `DAWN_VISION_MODE`
   Choose how inbound images are handled: `auto`, `caption`, `native`, or `off`. `auto` uses native image input when a runtime supports it, otherwise falls back to captions.
-- `CYBERBOSS_VISION_PROVIDER`, `CYBERBOSS_VISION_API_BASE_URL`, `CYBERBOSS_VISION_API_KEY`, `CYBERBOSS_VISION_MODEL`
+- `DAWN_VISION_PROVIDER`, `DAWN_VISION_API_BASE_URL`, `DAWN_VISION_API_KEY`, `DAWN_VISION_MODEL`
   Configure the optional OpenAI-compatible vision caption API used for text-only models. For Qwen/DashScope, start from [templates/vision-openai-compatible.env](./templates/vision-openai-compatible.env).
-- `CYBERBOSS_VISION_TIMEOUT_MS`
+- `DAWN_VISION_TIMEOUT_MS`
   Timeout for each image caption request.
-- `CYBERBOSS_WEIXIN_MIN_CHUNK_CHARS`
+- `DAWN_WEIXIN_MIN_CHUNK_CHARS`
   Set the default minimum merge size for short WeChat reply chunks.
-- `CYBERBOSS_WEIXIN_BASE_URL`, `CYBERBOSS_WEIXIN_CDN_BASE_URL`, `CYBERBOSS_WEIXIN_QR_BOT_TYPE`
+- `DAWN_WEIXIN_BASE_URL`, `DAWN_WEIXIN_CDN_BASE_URL`, `DAWN_WEIXIN_QR_BOT_TYPE`
   Override the WeChat bridge endpoints and QR bot type when your deployment needs it.
-- `CYBERBOSS_ENABLE_LOCATION_SERVER`
+- `DAWN_ENABLE_LOCATION_SERVER`
   Enable the built-in whereabouts HTTP ingest server.
-- `CYBERBOSS_LOCATION_HOST`
+- `DAWN_LOCATION_HOST`
   Host for the built-in whereabouts HTTP server. Default is `0.0.0.0`.
-- `CYBERBOSS_LOCATION_PORT`
+- `DAWN_LOCATION_PORT`
   Port for the built-in whereabouts HTTP server. Default is `4318`.
-- `CYBERBOSS_LOCATION_TOKEN`
+- `DAWN_LOCATION_TOKEN`
   Bearer token used to upload location data.
-- `CYBERBOSS_LOCATION_HOME_CENTER`, `CYBERBOSS_LOCATION_WORK_CENTER`
+- `DAWN_LOCATION_HOME_CENTER`, `DAWN_LOCATION_WORK_CENTER`
   Home and work center coordinates in `lat,lng` format.
-- `CYBERBOSS_LOCATION_KNOWN_PLACES`
+- `DAWN_LOCATION_KNOWN_PLACES`
   Extra named places as a JSON array.
-- `CYBERBOSS_LOCATION_PLACE_RADIUS_METERS`
+- `DAWN_LOCATION_PLACE_RADIUS_METERS`
   Radius for place-tag matching. Default is `150`.
-- `CYBERBOSS_LOCATION_BATTERY_HISTORY_LIMIT`
+- `DAWN_LOCATION_BATTERY_HISTORY_LIMIT`
   Number of battery observations to retain. Default is `100`.
 
 Why this matters:
 
-- the first `cyberboss` command auto-generates `~/.cyberboss/weixin-instructions.md`
-- if `CYBERBOSS_USER_NAME` and `CYBERBOSS_USER_GENDER` are missing, that generated persona file may start from the wrong assumptions
+- the first `cyberboss` command auto-generates `~/.exclusive-dawn/weixin-instructions.md`
+- if `DAWN_USER_NAME` and `DAWN_USER_GENDER` are missing, that generated persona file may start from the wrong assumptions
 
 If you want the strongest "push" effect, do not immediately rewrite the persona template by hand. Let the agent develop its rhythm through real conversation first, then edit only the parts that are clearly wrong.
 
-If you plan to use shared mode, set `CYBERBOSS_WORKSPACE_ROOT` before the first start so `shared:open` resolves the right thread for the right project.
+If you plan to use shared mode, set `DAWN_WORKSPACE_ROOT` before the first start so `shared:open` resolves the right thread for the right project.
 
-If you use a local Codex provider such as Ollama, prefer a small wrapper script instead of putting provider flags directly into `CYBERBOSS_CODEX_COMMAND`. Copy [templates/codex-local-provider.sh](./templates/codex-local-provider.sh) to `${HOME}/.cyberboss/codex-local`, make it executable, and point Cyberboss at it:
+If you use a local Codex provider such as Ollama, prefer a small wrapper script instead of putting provider flags directly into `DAWN_CODEX_COMMAND`. Copy [templates/codex-local-provider.sh](./templates/codex-local-provider.sh) to `${HOME}/.exclusive-dawn/codex-local`, make it executable, and point Dawn at it:
 
 ```bash
-cp ./templates/codex-local-provider.sh "${HOME}/.cyberboss/codex-local"
-chmod +x "${HOME}/.cyberboss/codex-local"
+cp ./templates/codex-local-provider.sh "${HOME}/.exclusive-dawn/codex-local"
+chmod +x "${HOME}/.exclusive-dawn/codex-local"
 ```
 
 ```dotenv
-CYBERBOSS_CODEX_COMMAND=/absolute/path/to/.cyberboss/codex-local
-CYBERBOSS_CODEX_MODEL_PROVIDER=ollama
-CYBERBOSS_CODEX_MODEL=gemma4:26b-32k
+DAWN_CODEX_COMMAND=/absolute/path/to/.exclusive-dawn/codex-local
+DAWN_CODEX_MODEL_PROVIDER=ollama
+DAWN_CODEX_MODEL=gemma4:26b-32k
 ```
 
-The template keeps cloud and local startup behavior in one command. When you switch back to the cloud provider, clear `CYBERBOSS_CODEX_MODEL_PROVIDER` and `CYBERBOSS_CODEX_MODEL`, then restart the shared bridge so the Codex app-server is launched with the new command environment.
+The template keeps cloud and local startup behavior in one command. When you switch back to the cloud provider, clear `DAWN_CODEX_MODEL_PROVIDER` and `DAWN_CODEX_MODEL`, then restart the shared bridge so the Codex app-server is launched with the new command environment.
 
-Local Codex models also need model metadata. If `CYBERBOSS_CODEX_MODEL` points at a model that is not in Codex's built-in catalog, add a model catalog file in your Codex home and reference it from `~/.codex/config.toml`:
+Local Codex models also need model metadata. If `DAWN_CODEX_MODEL` points at a model that is not in Codex's built-in catalog, add a model catalog file in your Codex home and reference it from `~/.codex/config.toml`:
 
 ```toml
 model_catalog_json = "/absolute/path/to/.codex/local-models.json"
@@ -258,7 +258,7 @@ model_catalog_json = "/absolute/path/to/.codex/local-models.json"
 
 Build that file from your existing Codex model catalog and add entries for your local model slugs, including the correct `context_window`, `max_context_window`, `input_modalities`, and truncation policy. Keep the cloud model entries in the catalog. Verify with `codex debug models`; Codex should list the local model and should not warn that it is using fallback metadata.
 
-When `CYBERBOSS_RUNTIME=claudecode`, Cyberboss also upserts a workspace-local `.mcp.json` entry for `cyberboss_tools` before starting Claude, and launches Claude with that MCP config explicitly attached. That is how Claude discovers the Cyberboss project tools without any global registration.
+When `DAWN_RUNTIME=claudecode`, Dawn also upserts a workspace-local `.mcp.json` entry for `dawn_tools` before starting Claude, and launches Claude with that MCP config explicitly attached. That is how Claude discovers the Dawn project tools without any global registration.
 
 ### Terminal commands for end users
 
@@ -279,7 +279,7 @@ When `CYBERBOSS_RUNTIME=claudecode`, Cyberboss also upserts a workspace-local `.
 
 Here, `checkin` means the random wake-up mechanism, not a fixed periodic reminder.
 
-Switch the runtime with `CYBERBOSS_RUNTIME`. You do not need a different command set for Claude Code.
+Switch the runtime with `DAWN_RUNTIME`. You do not need a different command set for Claude Code.
 
 `npm run start` and `npm run start:checkin` are still useful for minimal local debugging, but they are not the recommended way to observe or debug the real shared bridge workflow.
 
@@ -350,7 +350,7 @@ Notes:
 
 - Shared mode is the default mode in this README
 - The same WeChat commands and day-to-day behavior apply under both Codex and Claude Code
-- If `CYBERBOSS_RUNTIME=claudecode`, the local Claude window works best as a listener for the shared thread
+- If `DAWN_RUNTIME=claudecode`, the local Claude window works best as a listener for the shared thread
 - Do not let WeChat attach to a private spawned runtime if you expect terminal and WeChat to watch the same thread
 - Do not keep multiple `cyberboss` bridge processes alive at the same time
 - Do not put `npm run shared:start` in the background; it is the main shared bridge process
@@ -361,7 +361,7 @@ Notes:
 The default state directory is:
 
 ```text
-${HOME}/.cyberboss
+${HOME}/.exclusive-dawn
 ```
 
 Common contents:
@@ -407,58 +407,58 @@ This is the runtime state directory, not your project workspace. The WeChat thre
 
 ### Whereabouts Notes
 
-- Cyberboss already bundles `whereabouts-mcp` and can ingest phone location, battery, and trigger context directly.
+- Dawn already bundles `whereabouts-mcp` and can ingest phone location, battery, and trigger context directly.
 - To enable the built-in whereabouts server, configure at least:
-  - `CYBERBOSS_ENABLE_LOCATION_SERVER=true`
-  - `CYBERBOSS_LOCATION_TOKEN=<your_token>`
-  - `CYBERBOSS_LOCATION_HOME_CENTER=lat,lng`
+  - `DAWN_ENABLE_LOCATION_SERVER=true`
+  - `DAWN_LOCATION_TOKEN=<your_token>`
+  - `DAWN_LOCATION_HOME_CENTER=lat,lng`
 - Common optional variables:
-  - `CYBERBOSS_LOCATION_HOST`
-  - `CYBERBOSS_LOCATION_WORK_CENTER`
-  - `CYBERBOSS_LOCATION_KNOWN_PLACES`
-  - `CYBERBOSS_LOCATION_PLACE_RADIUS_METERS`
-  - `CYBERBOSS_LOCATION_BATTERY_HISTORY_LIMIT`
+  - `DAWN_LOCATION_HOST`
+  - `DAWN_LOCATION_WORK_CENTER`
+  - `DAWN_LOCATION_KNOWN_PLACES`
+  - `DAWN_LOCATION_PLACE_RADIUS_METERS`
+  - `DAWN_LOCATION_BATTERY_HISTORY_LIMIT`
 - The built-in server listens on `http://0.0.0.0:4318` by default. The ingest endpoint is `POST /location/ingest`, and health checks use `GET /healthz`.
-- Whereabouts data is stored in `${HOME}/.cyberboss/locations.json`, not in your project directory.
+- Whereabouts data is stored in `${HOME}/.exclusive-dawn/locations.json`, not in your project directory.
 
 ### Sticker Notes
 
 - On the current WeChat bridge path, do not rely on animated playback for inbound or outbound stickers. A GIF may still show up as a static image in chat.
 - Because of that, saved stickers are currently normalized to GIF at intake so the asset format is already aligned if WeChat later opens a fuller sticker capability.
-- The tag catalog lives at `${HOME}/.cyberboss/stickers/tags.json`. The AI reads from it, and users can edit it directly.
+- The tag catalog lives at `${HOME}/.exclusive-dawn/stickers/tags.json`. The AI reads from it, and users can edit it directly.
 - For now, sticker retrieval is tag-filtered only. There is no vector-database recall layer.
 
 <a id="agent-guide"></a>
 ## Agent Guide
 
-Agent-facing Cyberboss capabilities are project-native structured tools.
+Agent-facing Dawn capabilities are project-native structured tools.
 
 ### Common project tools
 
-- `cyberboss_reminder_create`
-- `cyberboss_diary_append`
-- `cyberboss_timeline_write`
-- `cyberboss_timeline_build`
-- `cyberboss_timeline_serve`
-- `cyberboss_timeline_dev`
-- `cyberboss_timeline_screenshot`
-- `cyberboss_channel_send_file`
+- `dawn_reminder_create`
+- `dawn_diary_append`
+- `dawn_timeline_write`
+- `dawn_timeline_build`
+- `dawn_timeline_serve`
+- `dawn_timeline_dev`
+- `dawn_timeline_screenshot`
+- `dawn_channel_send_file`
 - `whereabouts_current_stay`
 - `whereabouts_recent_stays`
 - `whereabouts_recent_moves`
 - `whereabouts_snapshot`
 - `whereabouts_summary`
-- `cyberboss_sticker_tags`
-- `cyberboss_sticker_pick`
-- `cyberboss_sticker_send`
-- `cyberboss_sticker_delete`
-- `cyberboss_sticker_save_from_inbox`
-- `cyberboss_sticker_update`
-- `cyberboss_system_send`
+- `dawn_sticker_tags`
+- `dawn_sticker_pick`
+- `dawn_sticker_send`
+- `dawn_sticker_delete`
+- `dawn_sticker_save_from_inbox`
+- `dawn_sticker_update`
+- `dawn_system_send`
 
 ### Agent conventions
 
-- Use Cyberboss project tools for diary, reminder, timeline, screenshot, and file-send operations
+- Use Dawn project tools for diary, reminder, timeline, screenshot, and file-send operations
 - Prefer documented lifecycle entrypoints from this README, `--help`, and [docs/commands.md](./docs/commands.md) for human terminal usage
 - On first failure, report the concrete error before reading source code
 
@@ -479,7 +479,7 @@ Because the project is not published as an npm package yet. Clone the repo and r
 
 ### Why set user name and gender before the first run?
 
-Because the first `cyberboss` command auto-generates `~/.cyberboss/weixin-instructions.md`. Setting `CYBERBOSS_USER_NAME` and `CYBERBOSS_USER_GENDER` first avoids obviously wrong persona assumptions in that file.
+Because the first `cyberboss` command auto-generates `~/.exclusive-dawn/weixin-instructions.md`. Setting `DAWN_USER_NAME` and `DAWN_USER_GENDER` first avoids obviously wrong persona assumptions in that file.
 
 ### Why not rewrite instructions aggressively from day one?
 

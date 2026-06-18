@@ -4,6 +4,7 @@ const {
   STICKER_DESC_FIELD_DESCRIPTION,
   STICKER_TAG_GUIDANCE,
 } = require("../services/sticker-service");
+const { VALID_TIME_TAGS } = require("../services/notion-life-service");
 
 class ProjectToolHost {
   constructor({ services, runtimeContextStore }) {
@@ -69,7 +70,7 @@ function listProjectToolNames() {
 
 const PROJECT_TOOLS = [
   {
-    name: "cyberboss_web_search",
+    name: "dawn_web_search",
     description: "Search the web using Jina AI. Use this when the user asks you to look something up, or when you need current information you don't know.",
     shortHint: "Search the web for a query.",
     topics: ["search"],
@@ -90,8 +91,8 @@ const PROJECT_TOOLS = [
     },
   },
   {
-    name: "cyberboss_diary_append",
-    description: "Append a diary entry into Cyberboss local diary storage.",
+    name: "dawn_diary_append",
+    description: "Append a diary entry into local diary storage.",
     shortHint: "Append a diary entry with direct text content.",
     topics: ["diary"],
     inputSchema: {
@@ -114,8 +115,8 @@ const PROJECT_TOOLS = [
     },
   },
   {
-    name: "cyberboss_reminder_create",
-    description: "Create a reminder in Cyberboss.",
+    name: "dawn_reminder_create",
+    description: "Create a reminder.",
     shortHint: "Create a reminder with direct text plus delayMinutes or dueAt.",
     topics: ["reminder"],
     inputSchema: {
@@ -138,8 +139,8 @@ const PROJECT_TOOLS = [
     },
   },
   {
-    name: "cyberboss_system_send",
-    description: "Queue an internal Cyberboss system trigger for the current bound workspace and chat.",
+    name: "dawn_system_send",
+    description: "Queue an internal system trigger for the current bound workspace and chat.",
     shortHint: "Queue an internal system message for the current workspace.",
     topics: ["system"],
     inputSchema: {
@@ -161,7 +162,7 @@ const PROJECT_TOOLS = [
     },
   },
   {
-    name: "cyberboss_notion_assignments_list",
+    name: "dawn_notion_assignments_list",
     description: "Read Bai Zhou's existing Notion Assignments/Exams database. Use this before creating a new assignment when you need examples, current workload, duplicate checks, due dates, or status context.",
     shortHint: "Read the existing Notion assignments database before planning or deduping.",
     topics: ["notion", "assignment"],
@@ -183,7 +184,7 @@ const PROJECT_TOOLS = [
     },
   },
   {
-    name: "cyberboss_notion_assignment_create",
+    name: "dawn_notion_assignment_create",
     description: "Create one assignment or exam in Bai Zhou's existing Notion Assignments/Exams database after inferring details from WeChat text, forwarded chat records, photos, screenshots, or files. Do not invent uncertain details; leave missing fields empty and list uncertainties so you can ask Bai Zhou a short follow-up.",
     shortHint: "Create a Notion assignment from inferred source details, listing uncertainties.",
     topics: ["notion", "assignment"],
@@ -216,7 +217,7 @@ const PROJECT_TOOLS = [
     },
   },
   {
-    name: "cyberboss_channel_send_file",
+    name: "dawn_channel_send_file",
     description: "Send an existing local file back to the current WeChat chat.",
     shortHint: "Send a local file back to the current WeChat user.",
     topics: ["channel"],
@@ -238,7 +239,7 @@ const PROJECT_TOOLS = [
     },
   },
   {
-    name: "cyberboss_sticker_tags",
+    name: "dawn_sticker_tags",
     description: `Load the current sticker tag catalog and tagging rules only when you have decided a sticker is needed or an inbox image should be saved as a sticker. ${STICKER_TAG_GUIDANCE}`,
     shortHint: "Load sticker tags only when needed.",
     topics: ["sticker"],
@@ -256,7 +257,7 @@ const PROJECT_TOOLS = [
     },
   },
   {
-    name: "cyberboss_sticker_pick",
+    name: "dawn_sticker_pick",
     description: "List a few saved sticker candidates for one sticker tag after you have decided a sticker would help.",
     shortHint: "Pick sticker candidates by tag.",
     topics: ["sticker"],
@@ -278,7 +279,7 @@ const PROJECT_TOOLS = [
     },
   },
   {
-    name: "cyberboss_sticker_send",
+    name: "dawn_sticker_send",
     description: "Send a saved sticker back to the current WeChat chat by sticker id.",
     shortHint: "Send a saved sticker by id.",
     topics: ["sticker"],
@@ -300,7 +301,7 @@ const PROJECT_TOOLS = [
     },
   },
   {
-    name: "cyberboss_sticker_delete",
+    name: "dawn_sticker_delete",
     description: "Delete one or more saved stickers by sticker id and remove their local GIF files.",
     shortHint: "Delete saved stickers by id array.",
     topics: ["sticker"],
@@ -331,7 +332,7 @@ const PROJECT_TOOLS = [
     },
   },
   {
-    name: "cyberboss_sticker_save_from_inbox",
+    name: "dawn_sticker_save_from_inbox",
     description: `Save one or more inbox images as reusable sticker GIFs after reading them all. Use an items array even for one sticker. ${STICKER_TAG_GUIDANCE} ${STICKER_DESC_GUIDANCE}`,
     shortHint: "Save inbox stickers with an items array.",
     topics: ["sticker"],
@@ -346,7 +347,7 @@ const PROJECT_TOOLS = [
             type: "object",
             required: ["filePath", "tags", "desc"],
             properties: {
-              filePath: { type: "string", description: "Absolute inbox image path under ~/.cyberboss/inbox." },
+              filePath: { type: "string", description: "Absolute inbox image path under ~/.exclusive-dawn/inbox." },
               tags: {
                 type: "array",
                 description: "One to three sticker tags. New short tags are allowed when the current catalog does not fit.",
@@ -373,7 +374,7 @@ const PROJECT_TOOLS = [
     },
   },
   {
-    name: "cyberboss_sticker_update",
+    name: "dawn_sticker_update",
     description: `Overwrite tags and desc for one or more saved stickers. Use an items array even for one sticker. ${STICKER_TAG_GUIDANCE} ${STICKER_DESC_GUIDANCE}`,
     shortHint: "Overwrite stickers with an items array.",
     topics: ["sticker"],
@@ -410,7 +411,7 @@ const PROJECT_TOOLS = [
     },
   },
   {
-    name: "cyberboss_timeline_read",
+    name: "dawn_timeline_read",
     description: "Read the current timeline day data for a specific date. Use this before editing when the current day state is uncertain.",
     shortHint: "Read a timeline day before editing it.",
     topics: ["timeline"],
@@ -433,7 +434,7 @@ const PROJECT_TOOLS = [
     },
   },
   {
-    name: "cyberboss_timeline_categories",
+    name: "dawn_timeline_categories",
     description: "List the current timeline taxonomy categories, subcategories, and event nodes. Use this before choosing category ids or event nodes.",
     shortHint: "Inspect the current timeline taxonomy before choosing category ids or event nodes.",
     topics: ["timeline"],
@@ -452,7 +453,7 @@ const PROJECT_TOOLS = [
     },
   },
   {
-    name: "cyberboss_timeline_proposals",
+    name: "dawn_timeline_proposals",
     description: "List proposed timeline event nodes, optionally filtered by date. Use this when deciding whether a new event node is actually needed.",
     shortHint: "Inspect proposed timeline event nodes before introducing new taxonomy.",
     topics: ["timeline"],
@@ -473,7 +474,7 @@ const PROJECT_TOOLS = [
     },
   },
   {
-    name: "cyberboss_timeline_write",
+    name: "dawn_timeline_write",
     description: "Write timeline events through timeline-for-agent. Inspect the current day and taxonomy first when category ids, event nodes, or existing events are uncertain.",
     shortHint: "Write timeline events after checking the current day and taxonomy when needed.",
     topics: ["timeline"],
@@ -522,7 +523,7 @@ const PROJECT_TOOLS = [
     },
   },
   {
-    name: "cyberboss_timeline_build",
+    name: "dawn_timeline_build",
     description: "Build the timeline site through timeline-for-agent.",
     shortHint: "Build the timeline site, optionally with locale.",
     topics: ["timeline"],
@@ -542,7 +543,7 @@ const PROJECT_TOOLS = [
     },
   },
   {
-    name: "cyberboss_timeline_serve",
+    name: "dawn_timeline_serve",
     description: "Start the timeline static server through timeline-for-agent.",
     shortHint: "Serve the timeline site, optionally with locale.",
     topics: ["timeline"],
@@ -562,7 +563,7 @@ const PROJECT_TOOLS = [
     },
   },
   {
-    name: "cyberboss_timeline_dev",
+    name: "dawn_timeline_dev",
     description: "Start the timeline dev server through timeline-for-agent.",
     shortHint: "Start the timeline dev server, optionally with locale.",
     topics: ["timeline"],
@@ -582,7 +583,97 @@ const PROJECT_TOOLS = [
     },
   },
   {
-    name: "cyberboss_timeline_screenshot",
+    name: "dawn_time_start",
+    description: "Start a new time-tracking entry in Bai Zhou's Notion Time database. Use this whenever she agrees to start working on a task, or when you proactively schedule an activity for her. Also links the entry to today's daily record automatically.",
+    shortHint: "Start timing a task in Notion.",
+    topics: ["notion", "time"],
+    inputSchema: {
+      type: "object",
+      required: ["task"],
+      properties: {
+        task: { type: "string", description: "Short task name, e.g. 做高数作业 or 看书." },
+        tags: {
+          type: "array",
+          items: { type: "string" },
+          description: `One to three tags from: ${VALID_TIME_TAGS.join(", ")}.`,
+        },
+        date: { type: "string", description: "Optional date YYYY-MM-DD for the daily record link. Defaults to today." },
+      },
+      additionalProperties: false,
+    },
+    async handler({ services, args }) {
+      const result = await services.notionLife.startTimeEntry(args);
+      return {
+        text: `计时开始：${result.task}（${result.startedAt}）`,
+        data: result,
+      };
+    },
+  },
+  {
+    name: "dawn_time_stop",
+    description: "Stop the currently open time-tracking entry in Bai Zhou's Notion Time database. Use this when she says she is done, taking a break, or switching tasks. If no entry is open, returns a message saying so.",
+    shortHint: "Stop the current open timer in Notion.",
+    topics: ["notion", "time"],
+    inputSchema: {
+      type: "object",
+      properties: {
+        entryId: { type: "string", description: "Optional explicit Notion page id to stop. Omit to stop the most recent open entry." },
+      },
+      additionalProperties: false,
+    },
+    async handler({ services, args }) {
+      const result = await services.notionLife.stopTimeEntry(args);
+      if (!result.stopped) {
+        return { text: result.message || "没有正在进行的计时条目", data: result };
+      }
+      const taskLabel = result.task ? `（${result.task}）` : "";
+      return {
+        text: `计时停止${taskLabel}，结束时间：${result.endedAt}`,
+        data: result,
+      };
+    },
+  },
+  {
+    name: "dawn_daily_record_write",
+    description: "Write health or activity data into today's (or a specific date's) 每日记录 entry in Notion. Use this to record sleep, exercise, mood, heart rate, steps, or any other daily health/life metrics Bai Zhou shares.",
+    shortHint: "Write fields to the daily health/life record in Notion.",
+    topics: ["notion", "diary", "health"],
+    inputSchema: {
+      type: "object",
+      properties: {
+        date: { type: "string", description: "Date YYYY-MM-DD. Defaults to today." },
+        bedtime: { type: "string", description: "Bedtime ISO datetime, e.g. 2026-05-19T23:30:00+08:00." },
+        wakeTime: { type: "string", description: "Wake-up time ISO datetime." },
+        sleepHours: { type: "number", description: "Total sleep duration in hours." },
+        sleepScore: { type: "number", description: "Sleep quality score (0-100)." },
+        deepSleepMin: { type: "number", description: "Deep sleep minutes." },
+        lightSleepMin: { type: "number", description: "Light sleep minutes." },
+        remSleepMin: { type: "number", description: "REM sleep minutes." },
+        steps: { type: "number", description: "Step count." },
+        calories: { type: "number", description: "Calories burned (kcal)." },
+        exercised: { type: "boolean", description: "Whether she exercised today." },
+        exerciseMin: { type: "number", description: "Total exercise duration in minutes." },
+        exerciseTypes: { type: "array", items: { type: "string" }, description: "Exercise types, e.g. [\"跑步\", \"瑜伽\"]." },
+        vigorousMin: { type: "number", description: "Moderate-to-vigorous intensity exercise minutes." },
+        restingHeartRate: { type: "number", description: "Resting heart rate (bpm)." },
+        stressScore: { type: "number", description: "Stress score (0-100)." },
+        mood: { type: "string", description: "Mood: 很好, 好, 一般, 差, or 很差." },
+        dietSummary: { type: "string", description: "Brief diet summary." },
+        completedItems: { type: "string", description: "Summary of completed tasks/activities." },
+        notes: { type: "string", description: "Free-form notes for the day." },
+      },
+      additionalProperties: false,
+    },
+    async handler({ services, args }) {
+      const result = await services.notionLife.writeDailyRecord(args);
+      return {
+        text: `每日记录已更新：${result.date}，写入字段：${result.fieldsWritten.join("、")}`,
+        data: result,
+      };
+    },
+  },
+  {
+    name: "dawn_timeline_screenshot",
     description: "Capture a timeline screenshot and send it back to the current WeChat chat.",
     shortHint: "Capture a timeline screenshot with structured selection fields.",
     topics: ["timeline"],
@@ -686,7 +777,7 @@ function validateTimelineWriteArgs(args) {
     const hasTitle = normalizeText(event.title).length > 0;
     const hasEventNodeId = normalizeText(event.eventNodeId).length > 0;
     if (!hasTitle && !hasEventNodeId) {
-      throw new Error(`cyberboss_timeline_write input.events[${index}].title or input.events[${index}].eventNodeId is required.`);
+      throw new Error(`dawn_timeline_write input.events[${index}].title or input.events[${index}].eventNodeId is required.`);
     }
   });
 }

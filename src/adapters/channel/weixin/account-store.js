@@ -1,4 +1,4 @@
-const fs = require("fs");
+﻿const fs = require("fs");
 const path = require("path");
 
 function normalizeAccountId(raw) {
@@ -108,7 +108,7 @@ function resolveSelectedAccount(config) {
   }
   if (accounts.length > 1) {
     const accountIds = accounts.map((account) => account.accountId).join(", ");
-    throw new Error(`Multiple WeChat accounts were detected. Set CYBERBOSS_ACCOUNT_ID. Available values: ${accountIds}`);
+    throw new Error(`Multiple WeChat accounts were detected. Set DAWN_ACCOUNT_ID. Available values: ${accountIds}`);
   }
   if (!accounts[0].token) {
     throw new Error(`WeChat account is missing a token: ${accounts[0].accountId}. Run login again.`);

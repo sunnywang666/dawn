@@ -1,38 +1,38 @@
-const test = require("node:test");
+﻿const test = require("node:test");
 const assert = require("node:assert/strict");
 
-const { CyberbossApp } = require("../src/core/app");
+const { DawnApp } = require("../src/core/app");
 const { mapCodexMessageToRuntimeEvent } = require("../src/adapters/runtime/codex/events");
 const { buildCodexMcpConfigArgs } = require("../src/adapters/runtime/codex/mcp-config");
 
-test("codex MCP config auto-approves cyberboss tools", () => {
+test("codex MCP config auto-approves dawn tools", () => {
   const args = buildCodexMcpConfigArgs({
-    name: "cyberboss_tools",
+    name: "dawn_tools",
     command: "/usr/bin/node",
-    args: ["/workspace/bin/cyberboss.js", "tool-mcp-server"],
+    args: ["/workspace/bin/exclusive-dawn.js", "tool-mcp-server"],
   });
 
   assert.deepEqual(args.slice(0, 4), [
     "-c",
-    "mcp_servers.cyberboss_tools.command=\"/usr/bin/node\"",
+    "mcp_servers.dawn_tools.command=\"/usr/bin/node\"",
     "-c",
-    "mcp_servers.cyberboss_tools.args=[\"/workspace/bin/cyberboss.js\",\"tool-mcp-server\"]",
+    "mcp_servers.dawn_tools.args=[\"/workspace/bin/exclusive-dawn.js\",\"tool-mcp-server\"]",
   ]);
   assert.match(
     args.join("\n"),
-    /mcp_servers\.cyberboss_tools\.tools\.cyberboss_channel_send_file\.approval_mode="auto"/
+    /mcp_servers\.dawn_tools\.tools\.dawn_channel_send_file\.approval_mode="auto"/
   );
   assert.match(
     args.join("\n"),
-    /mcp_servers\.cyberboss_tools\.tools\.cyberboss_reminder_create\.approval_mode="auto"/
+    /mcp_servers\.dawn_tools\.tools\.dawn_reminder_create\.approval_mode="auto"/
   );
   assert.match(
     args.join("\n"),
-    /mcp_servers\.cyberboss_tools\.tools\.cyberboss_timeline_screenshot\.approval_mode="auto"/
+    /mcp_servers\.dawn_tools\.tools\.dawn_timeline_screenshot\.approval_mode="auto"/
   );
   assert.match(
     args.join("\n"),
-    /mcp_servers\.cyberboss_tools\.tools\.whereabouts_snapshot\.approval_mode="auto"/
+    /mcp_servers\.dawn_tools\.tools\.whereabouts_snapshot\.approval_mode="auto"/
   );
 });
 
@@ -41,20 +41,20 @@ test("codex MCP elicitation approvals map to runtime approval events", () => {
     id: "req-mcp-1",
     method: "mcpServer/elicitation/request",
     params: {
-      serverName: "cyberboss_tools",
+      serverName: "dawn_tools",
       threadId: "thread-1",
       turnId: "turn-1",
       mode: "form",
       _meta: {
         codex_approval_kind: "mcp_tool_call",
         persist: ["session", "always"],
-        tool_description: "Create a reminder in Cyberboss. Input: { text: string, delayMinutes?: integer }",
+        tool_description: "Create a reminder. Input: { text: string, delayMinutes?: integer }",
         tool_params_display: [
           { name: "delayMinutes", display_name: "delayMinutes", value: 5 },
           { name: "text", display_name: "text", value: "hello" },
         ],
       },
-      message: "Allow the cyberboss_tools MCP server to run tool \"cyberboss_reminder_create\"?",
+      message: "Allow the dawn_tools MCP server to run tool \"dawn_reminder_create\"?",
       requestedSchema: {
         type: "object",
         properties: {},
@@ -65,8 +65,8 @@ test("codex MCP elicitation approvals map to runtime approval events", () => {
   assert.equal(event.type, "runtime.approval.requested");
   assert.equal(event.payload.kind, "mcp_tool_call");
   assert.equal(event.payload.threadId, "thread-1");
-  assert.deepEqual(event.payload.commandTokens, ["mcp_tool", "cyberboss_tools", "cyberboss_reminder_create"]);
-  assert.equal(event.payload.command, "cyberboss_reminder_create\ndelayMinutes: 5\ntext: hello");
+  assert.deepEqual(event.payload.commandTokens, ["mcp_tool", "dawn_tools", "dawn_reminder_create"]);
+  assert.equal(event.payload.command, "dawn_reminder_create\ndelayMinutes: 5\ntext: hello");
   assert.deepEqual(event.payload.responseTemplate.supportedCommands, ["yes", "no"]);
   assert.deepEqual(event.payload.responseTemplate.responseByCommand.yes, {
     action: "accept",
@@ -85,7 +85,7 @@ test("codex MCP elicitation approvals map to runtime approval events", () => {
 test("handleRuntimeEvent auto-approves project-native Codex MCP elicitation approvals", async () => {
   const responses = [];
   const appLike = {
-    config: { stateDir: "/tmp/cyberboss-test-state" },
+    config: { stateDir: "/tmp/dawn-test-state" },
     streamDelivery: {
       async handleRuntimeEvent() {},
     },
@@ -117,7 +117,7 @@ test("handleRuntimeEvent auto-approves project-native Codex MCP elicitation appr
     },
   };
 
-  await CyberbossApp.prototype.handleRuntimeEvent.call(appLike, {
+  await DawnApp.prototype.handleRuntimeEvent.call(appLike, {
     type: "runtime.approval.requested",
     payload: {
       kind: "mcp_elicitation",
@@ -126,7 +126,7 @@ test("handleRuntimeEvent auto-approves project-native Codex MCP elicitation appr
       },
       threadId: "thread-1",
       requestId: "req-project-tool",
-      commandTokens: ["mcp_tool", "cyberboss_tools", "cyberboss_reminder_create"],
+      commandTokens: ["mcp_tool", "dawn_tools", "dawn_reminder_create"],
       responseTemplate: {
         responseByCommand: {
           yes: {
@@ -201,7 +201,7 @@ test("handleApprovalCommand sends MCP elicitation responses back through the run
     },
   };
 
-  await CyberbossApp.prototype.handleApprovalCommand.call(
+  await DawnApp.prototype.handleApprovalCommand.call(
     appLike,
     { workspaceId: "workspace-id", accountId: "account-id", senderId: "user-1", contextToken: "ctx-1" },
     { name: "yes" },
@@ -269,7 +269,7 @@ test("handleApprovalCommand does not pretend to support persistent Codex MCP too
     },
   };
 
-  await CyberbossApp.prototype.handleApprovalCommand.call(
+  await DawnApp.prototype.handleApprovalCommand.call(
     appLike,
     { workspaceId: "workspace-id", accountId: "account-id", senderId: "user-1", contextToken: "ctx-1" },
     { name: "always" },

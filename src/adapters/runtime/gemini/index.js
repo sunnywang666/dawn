@@ -1,4 +1,4 @@
-const fs = require("fs");
+﻿const fs = require("fs");
 const { randomUUID } = require("crypto");
 const { SessionStore } = require("../codex/session-store");
 const { loadWechatInstructions } = require("../shared-instructions");
@@ -44,7 +44,7 @@ function createGeminiRuntimeAdapter(config, { toolHost = null } = {}) {
     },
     async initialize() {
       if (!apiKey) {
-        console.warn("[gemini-runtime] CYBERBOSS_GEMINI_API_KEY is not set");
+        console.warn("[gemini-runtime] DAWN_GEMINI_API_KEY is not set");
       }
       return { model, models: [] };
     },

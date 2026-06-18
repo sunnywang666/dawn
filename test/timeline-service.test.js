@@ -1,4 +1,4 @@
-const test = require("node:test");
+﻿const test = require("node:test");
 const assert = require("node:assert/strict");
 
 const { TimelineService } = require("../src/services/timeline-service");
@@ -7,8 +7,8 @@ function createService() {
   const calls = [];
   const service = new TimelineService({
     config: {
-      stateDir: "/tmp/cyberboss-state",
-      timelineScreenshotQueueFile: "/tmp/cyberboss-timeline-service-test.json",
+      stateDir: "/tmp/dawn-state",
+      timelineScreenshotQueueFile: "/tmp/dawn-timeline-service-test.json",
     },
     timelineIntegration: {
       async runSubcommand(subcommand, args) {

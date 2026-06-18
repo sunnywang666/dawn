@@ -1,4 +1,4 @@
-const test = require("node:test");
+﻿const test = require("node:test");
 const assert = require("node:assert/strict");
 const fs = require("fs");
 const os = require("os");
@@ -10,10 +10,10 @@ const {
   DEFAULT_MAX_INTERVAL_MS,
   parseCheckinRangeMinutes,
 } = require("../src/core/checkin-config-store");
-const { CyberbossApp } = require("../src/core/app");
+const { DawnApp } = require("../src/core/app");
 
 function createStore() {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "cyberboss-checkin-test-"));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "dawn-checkin-test-"));
   return new CheckinConfigStore({ filePath: path.join(dir, "checkin-config.json") });
 }
 
@@ -49,7 +49,7 @@ test("handleCheckinCommand stores the new range and replies in English", async (
     },
   };
 
-  await CyberbossApp.prototype.handleCheckinCommand.call(appLike, {
+  await DawnApp.prototype.handleCheckinCommand.call(appLike, {
     senderId: "user-1",
     contextToken: "ctx-1",
   }, {
@@ -82,13 +82,13 @@ test("handleChunkCommand reports current value and persists updates through the 
     },
   };
 
-  await CyberbossApp.prototype.handleChunkCommand.call(appLike, {
+  await DawnApp.prototype.handleChunkCommand.call(appLike, {
     senderId: "user-1",
     contextToken: "ctx-1",
   }, {
     args: "",
   });
-  await CyberbossApp.prototype.handleChunkCommand.call(appLike, {
+  await DawnApp.prototype.handleChunkCommand.call(appLike, {
     senderId: "user-1",
     contextToken: "ctx-1",
   }, {

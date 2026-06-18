@@ -1,14 +1,14 @@
 {
   "mcpServers": {
-    "cyberboss_tools": {
+    "dawn_tools": {
       "command": "C:\\Program Files\\nodejs\\node.exe",
       "args": [
-        "D:\\GitHub\\WenXiaoWendy\\cyberboss\\bin\\cyberboss.js",
+        "D:\\GitHub\\exclusive-dawn\\bin\\exclusive-dawn.js",
         "tool-mcp-server",
         "--runtime-id",
         "claudecode",
         "--workspace-root",
-        "D:\\GitHub\\WenXiaoWendy\\cyberboss"
+        "D:\\GitHub\\exclusive-dawn"
       ]
     }
   }

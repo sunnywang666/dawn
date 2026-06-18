@@ -548,7 +548,7 @@ async function saveStickerEntry({
   hashByStickerId = new Map(),
   item = {},
 } = {}) {
-  const tempDir = await fsp.mkdtemp(path.join(os.tmpdir(), "cyberboss-sticker-save-"));
+  const tempDir = await fsp.mkdtemp(path.join(os.tmpdir(), "dawn-sticker-save-"));
   const normalizedGifPath = path.join(tempDir, "normalized.gif");
   try {
     await normalizeStickerGif({

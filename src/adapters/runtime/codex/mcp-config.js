@@ -1,17 +1,17 @@
-const fs = require("fs");
+﻿const fs = require("fs");
 const path = require("path");
 const { listProjectToolNames } = require("../../../tools/tool-host");
 
-function resolveCodexProjectToolMcpServerConfig({ cyberbossHome = "" } = {}) {
-  const home = normalizeNonEmptyString(cyberbossHome)
-    || process.env.CYBERBOSS_HOME
+function resolveCodexProjectToolMcpServerConfig({ appHome = "" } = {}) {
+  const home = normalizeNonEmptyString(appHome)
+    || process.env.DAWN_HOME
     || path.resolve(__dirname, "..", "..", "..", "..");
-  const scriptPath = path.join(home, "bin", "cyberboss.js");
+  const scriptPath = path.join(home, "bin", "exclusive-dawn.js");
   if (!fs.existsSync(scriptPath)) {
     return null;
   }
   return {
-    name: "cyberboss_tools",
+    name: "dawn_tools",
     command: process.execPath,
     args: [scriptPath, "tool-mcp-server", "--runtime-id", "codex"],
   };
@@ -21,7 +21,7 @@ function buildCodexMcpConfigArgs(mcpServerConfig) {
   if (!mcpServerConfig || typeof mcpServerConfig !== "object") {
     return [];
   }
-  const name = normalizeNonEmptyString(mcpServerConfig.name) || "cyberboss_tools";
+  const name = normalizeNonEmptyString(mcpServerConfig.name) || "dawn_tools";
   const command = normalizeNonEmptyString(mcpServerConfig.command);
   const args = Array.isArray(mcpServerConfig.args)
     ? mcpServerConfig.args.map((value) => normalizeNonEmptyString(value)).filter(Boolean)
