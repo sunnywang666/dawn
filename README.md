@@ -1,492 +1,73 @@
-﻿<div align="center">
+# exclusive-dawn（已归档）
 
-[中文](./README.zh-CN.md) · English
+原 Dawn WeChat 桥接项目——把 Claude Code / Codex 接入微信的 Node.js 方案。
 
-# The Overbearing Boss Fell for My ADHD
-## Dawn: a WeChat bridge for Codex and Claude Code
+**当前状态：已停用，由 [晨曦微信机器人](../WeChatBot_WXAUTO_SE-3.24.6) 替代。**
 
-> "Keep escaping into dopamine if you want. I'll still catch you at the next timestamp."
+---
 
-[![Node >=22](https://img.shields.io/badge/Node-22%2B-3C873A)](./package.json)
-[![License: AGPLv3](https://img.shields.io/badge/License-AGPLv3-b31b1b)](./LICENSE)
-[![Runtime-Codex%20%7C%20ClaudeCode](https://img.shields.io/badge/Runtime-Codex%20%7C%20ClaudeCode-111827)](#technical-stack)
-[![Bridge-Weixin](https://img.shields.io/badge/Bridge-Weixin-07C160)](#technical-stack)
-[![Timeline-Enabled](https://img.shields.io/badge/Timeline-Enabled-8b5cf6)](#core-features)
+## 这是什么
 
-<p>
-  <a href="#user-guide">User Guide</a> ·
-  <a href="#agent-guide">Agent Guide</a> ·
-  <a href="#data-dir">Local Data</a> ·
-  <a href="#faq">FAQ</a>
-</p>
+Dawn 把本地 AI（Claude Code 或 Codex）接入微信，支持：
+- 微信消息双向传递（通过微信 HTTP 桥接）
+- 随机 check-in（定时唤醒 AI）
+- 本地日记写入
+- 提醒队列
+- 时间线记录
 
-</div>
+和晨曦的区别：这个版本用的是微信 web 协议（HTTP 桥接），不依赖桌面客户端自动化，但稳定性不如 wxautox4。
 
-<p align="center">
-  <img src="./docs/images/IMG_0241.PNG" alt="Dawn English demo 1" width="31%" />
-  <img src="./docs/images/IMG_0244.PNG" alt="Dawn English demo 2" width="31%" />
-  <img src="./docs/images/IMG_0245.PNG" alt="Dawn English demo 3" width="31%" />
-</p>
+---
 
-Dawn is not another polite productivity timer. It is not a to-do list with better branding either.
+## 怎么重新启动
 
-It is an agent bridge that plugs a local coding runtime directly into WeChat and turns it into a time-aware, context-persistent accountability companion. It supports Codex and Claude Code while keeping the same commands and day-to-day behavior. It does not wait for you to "start a session". It watches the flow of your day, notices when you disappear, and decides when to show up again.
+```powershell
+# 开启计划任务（当初禁用的那个）
+Enable-ScheduledTask -TaskName "Cyberboss Local Autostart"
 
-## Why Dawn?
-
-For people with ADHD, or anyone who needs strong external accountability, most productivity tools fail for the same reason: they assume you still have enough executive function to remember to use them.
-
-Dawn starts from a transfer of control.
-
-- No manual start button
-  It lives inside the chat interface you actually open every day.
-- Inescapable sense of time
-  It sees when you replied, when you vanished, and how long a promise stayed unresolved.
-- Real external feedback
-  If self-discipline is unreliable, hand the supervision layer to an agent that stays online, keeps memory, and can act across time.
-
-<a id="core-features"></a>
-## Core Features: fully automated accountability
-
-1. Omniscient Time
-Every inbound WeChat message is stamped with local time before it reaches the runtime. The model is not just reading text. It is reading your day as it unfolds.
-
-2. The Ledger of Life
-Using those timestamps, Dawn reconstructs when events start, when they end, and how long they last, then turns fragmented chat into a structured personal timeline.
-
-3. Stochastic Pulse
-At random intervals, the system wakes the agent up and lets it decide what to do next: send a message, stay silent, write in the diary, update the timeline, or use tools.
-
-4. Local Reminder Queue
-Reminders are not primarily a user-facing alarm clock. They are how the model leaves instructions for its future self and wakes itself up later.
-
-5. Zero-Token Diary
-Daily traces can be written to local files without depending on a cloud note service or burning extra model context every time.
-
-## Timeline also works on its own
-
-If the most interesting part of Dawn is the "ledger of life" layer, you can use that separately:
-
-- Project: [WenXiaoWendy/timeline-for-agent](https://github.com/WenXiaoWendy/timeline-for-agent)
-- It is an independent project and does not require the WeChat bridge
-- You can plug it into your own agent, bot, or automation stack even if you do not use Codex
-
-Dawn builds on top of `timeline-for-agent`, then adds WeChat, reminders, diary writing, and random check-ins around it.
-
-<a id="technical-stack"></a>
-## Technical Stack
-
-- **Core**
-  A pluggable runtime layer for Codex and Claude Code, with the same WeChat command surface and shared-thread workflow.
-- **Bridge**
-  A WeChat HTTP bridge with long-poll synchronization for inbound messages, outbound replies, files, and status transitions.
-- **Task System**
-  Local queues for reminders, system triggers, and timeline screenshot jobs.
-- **Capability Layer**
-  Timeline, diary, random check-ins, file delivery, and related runtime actions.
-- **Optional Tooling**
-  MCP or other local hardware / software integrations can be added, but they are optional.
-
-## Why It Exists
-
-Dawn is built against the myth that productivity begins with self-control.
-
-- Pomodoro assumes you can start on command.
-- To-do apps assume you can keep returning.
-- Reminder apps assume you will still respect them when they fire.
-
-Dawn assumes none of that. It treats the user as someone who may drift, disappear, procrastinate, or lose momentum, then moves the regulatory layer outside the user and into an always-on local agent.
-
-<a id="user-guide"></a>
-## User Guide
-
-### Requirements
-
-- Node.js `>= 22`
-- `codex` or `claude` installed locally
-- Chrome / Chromium / Edge if you want screenshot features
-
-### Get the source and install dependencies
-
-This project is not published as an npm package. Clone the repo and install inside the project directory:
-
-```bash
-git clone https://github.com/WenXiaoWendy/exclusive-dawn.git
-cd exclusive-dawn
-npm install
+# 或者直接手动启动
+cd D:\GitHub\exclusive-dawn
+node bin\exclusive-dawn.js start --checkin
 ```
 
-### Configure environment variables before the first command
+状态检查：
+```powershell
+node D:\GitHub\exclusive-dawn\scripts\shared-status.js
+```
 
-`Dawn` reads environment variables from:
+---
 
-- `.env` in the current project directory
-- `${HOME}/.exclusive-dawn/.env`
-- the current shell environment
+## 环境变量
 
-Before running the first command, set at least:
+`.env` 文件关键配置：
 
 ```dotenv
-DAWN_USER_NAME=YourName
+DAWN_USER_NAME=白昼
 DAWN_USER_GENDER=female
-DAWN_ALLOWED_USER_IDS=your_wechat_user_id
-DAWN_WORKSPACE_ROOT=/absolute/path/to/your/project
+DAWN_ALLOWED_USER_IDS=wxid_xxx
+DAWN_WORKSPACE_ROOT=D:\GitHub\exclusive-dawn
+DAWN_RUNTIME=claudecode
 ```
 
-Common optional variables:
+---
 
-```dotenv
-DAWN_RUNTIME=codex
-DAWN_CODEX_ENDPOINT=ws://127.0.0.1:8765
-DAWN_CODEX_COMMAND=
-DAWN_CODEX_MODEL=
-DAWN_CODEX_MODEL_PROVIDER=
-DAWN_CODEX_NATIVE_IMAGE_INPUT=
-DAWN_CLAUDE_COMMAND=claude
-DAWN_CLAUDE_MODEL=
-DAWN_CLAUDE_CONTEXT_WINDOW=
-DAWN_CLAUDE_PERMISSION_MODE=default
-DAWN_CLAUDE_DISABLE_VERBOSE=false
-DAWN_CLAUDE_EXTRA_ARGS=
-CLAUDE_CODE_MAX_OUTPUT_TOKENS=
-DAWN_VISION_MODE=auto
-DAWN_VISION_PROVIDER=openai-compatible
-DAWN_VISION_API_BASE_URL=
-DAWN_VISION_API_KEY=
-DAWN_VISION_MODEL=
-DAWN_VISION_TIMEOUT_MS=30000
-DAWN_ACCOUNT_ID=
-DAWN_WEIXIN_MIN_CHUNK_CHARS=20
-DAWN_WEIXIN_BASE_URL=https://ilinkai.weixin.qq.com
-DAWN_WEIXIN_CDN_BASE_URL=https://novac2c.cdn.weixin.qq.com/c2c
-DAWN_WEIXIN_QR_BOT_TYPE=3
-DAWN_ENABLE_LOCATION_SERVER=false
-DAWN_LOCATION_HOST=0.0.0.0
-DAWN_LOCATION_PORT=4318
-DAWN_LOCATION_TOKEN=
-DAWN_LOCATION_HOME_CENTER=
-DAWN_LOCATION_WORK_CENTER=
-DAWN_LOCATION_KNOWN_PLACES=
-DAWN_LOCATION_PLACE_RADIUS_METERS=150
-DAWN_LOCATION_BATTERY_HISTORY_LIMIT=100
+## 目录结构
+
+```
+bin/exclusive-dawn.js     入口
+src/
+  adapters/channel/weixin/   微信桥接层
+  adapters/runtime/claudecode/  Claude Code 适配
+  adapters/runtime/codex/       Codex 适配
+  core/                     核心逻辑
+  services/                 工具服务
+  tools/                    MCP 工具
+scripts/                    启动/状态脚本
+templates/                  配置模板
 ```
 
-What these do:
+运行时状态存在 `C:\Users\happy\.exclusive-dawn\`（账号、会话、日记、提醒队列等）。
 
-- `DAWN_RUNTIME`
-  Choose `codex` or `claudecode`. The command set stays the same.
-- `DAWN_CODEX_ENDPOINT`
-  Reuse an existing shared Codex app-server instead of spawning a private runtime.
-- `DAWN_CODEX_COMMAND`
-  Override the Codex launcher when `codex` is not directly on your `PATH`.
-- `DAWN_CODEX_MODEL`
-  Force Codex turns to use a specific model. Leave empty to use Codex's default model selection.
-- `DAWN_CODEX_MODEL_PROVIDER`
-  Force Codex turns to use a specific provider, such as `ollama` for local models. Leave empty for the default cloud provider.
-- `DAWN_CODEX_NATIVE_IMAGE_INPUT`
-  Optional override for direct image input through the Codex app-server path. Leave empty to infer from model metadata; set `true` to test a local multimodal model directly, or `false` to force caption fallback.
-- `DAWN_CLAUDE_COMMAND`
-  Override the Claude launcher. Default is `claude`.
-- `DAWN_CLAUDE_MODEL`
-  Set the default Claude model.
-- `DAWN_CLAUDE_CONTEXT_WINDOW`
-  Set Claude's effective context window so `/status` can show an approximate context usage line.
-- `DAWN_CLAUDE_PERMISSION_MODE`
-  Set Claude's permission mode before the bridge starts.
-- `DAWN_CLAUDE_DISABLE_VERBOSE`
-  Disable verbose Claude terminal output.
-- `DAWN_CLAUDE_EXTRA_ARGS`
-  Append extra Claude CLI arguments as a comma-separated list.
-- `CLAUDE_CODE_MAX_OUTPUT_TOKENS`
-  Reserve output tokens for Claude replies. `/status` subtracts this reserve from the configured Claude context window.
-- `DAWN_VISION_MODE`
-  Choose how inbound images are handled: `auto`, `caption`, `native`, or `off`. `auto` uses native image input when a runtime supports it, otherwise falls back to captions.
-- `DAWN_VISION_PROVIDER`, `DAWN_VISION_API_BASE_URL`, `DAWN_VISION_API_KEY`, `DAWN_VISION_MODEL`
-  Configure the optional OpenAI-compatible vision caption API used for text-only models. For Qwen/DashScope, start from [templates/vision-openai-compatible.env](./templates/vision-openai-compatible.env).
-- `DAWN_VISION_TIMEOUT_MS`
-  Timeout for each image caption request.
-- `DAWN_WEIXIN_MIN_CHUNK_CHARS`
-  Set the default minimum merge size for short WeChat reply chunks.
-- `DAWN_WEIXIN_BASE_URL`, `DAWN_WEIXIN_CDN_BASE_URL`, `DAWN_WEIXIN_QR_BOT_TYPE`
-  Override the WeChat bridge endpoints and QR bot type when your deployment needs it.
-- `DAWN_ENABLE_LOCATION_SERVER`
-  Enable the built-in whereabouts HTTP ingest server.
-- `DAWN_LOCATION_HOST`
-  Host for the built-in whereabouts HTTP server. Default is `0.0.0.0`.
-- `DAWN_LOCATION_PORT`
-  Port for the built-in whereabouts HTTP server. Default is `4318`.
-- `DAWN_LOCATION_TOKEN`
-  Bearer token used to upload location data.
-- `DAWN_LOCATION_HOME_CENTER`, `DAWN_LOCATION_WORK_CENTER`
-  Home and work center coordinates in `lat,lng` format.
-- `DAWN_LOCATION_KNOWN_PLACES`
-  Extra named places as a JSON array.
-- `DAWN_LOCATION_PLACE_RADIUS_METERS`
-  Radius for place-tag matching. Default is `150`.
-- `DAWN_LOCATION_BATTERY_HISTORY_LIMIT`
-  Number of battery observations to retain. Default is `100`.
+---
 
-Why this matters:
-
-- the first `cyberboss` command auto-generates `~/.exclusive-dawn/weixin-instructions.md`
-- if `DAWN_USER_NAME` and `DAWN_USER_GENDER` are missing, that generated persona file may start from the wrong assumptions
-
-If you want the strongest "push" effect, do not immediately rewrite the persona template by hand. Let the agent develop its rhythm through real conversation first, then edit only the parts that are clearly wrong.
-
-If you plan to use shared mode, set `DAWN_WORKSPACE_ROOT` before the first start so `shared:open` resolves the right thread for the right project.
-
-If you use a local Codex provider such as Ollama, prefer a small wrapper script instead of putting provider flags directly into `DAWN_CODEX_COMMAND`. Copy [templates/codex-local-provider.sh](./templates/codex-local-provider.sh) to `${HOME}/.exclusive-dawn/codex-local`, make it executable, and point Dawn at it:
-
-```bash
-cp ./templates/codex-local-provider.sh "${HOME}/.exclusive-dawn/codex-local"
-chmod +x "${HOME}/.exclusive-dawn/codex-local"
-```
-
-```dotenv
-DAWN_CODEX_COMMAND=/absolute/path/to/.exclusive-dawn/codex-local
-DAWN_CODEX_MODEL_PROVIDER=ollama
-DAWN_CODEX_MODEL=gemma4:26b-32k
-```
-
-The template keeps cloud and local startup behavior in one command. When you switch back to the cloud provider, clear `DAWN_CODEX_MODEL_PROVIDER` and `DAWN_CODEX_MODEL`, then restart the shared bridge so the Codex app-server is launched with the new command environment.
-
-Local Codex models also need model metadata. If `DAWN_CODEX_MODEL` points at a model that is not in Codex's built-in catalog, add a model catalog file in your Codex home and reference it from `~/.codex/config.toml`:
-
-```toml
-model_catalog_json = "/absolute/path/to/.codex/local-models.json"
-```
-
-Build that file from your existing Codex model catalog and add entries for your local model slugs, including the correct `context_window`, `max_context_window`, `input_modalities`, and truncation policy. Keep the cloud model entries in the catalog. Verify with `codex debug models`; Codex should list the local model and should not warn that it is using fallback metadata.
-
-When `DAWN_RUNTIME=claudecode`, Dawn also upserts a workspace-local `.mcp.json` entry for `dawn_tools` before starting Claude, and launches Claude with that MCP config explicitly attached. That is how Claude discovers the Dawn project tools without any global registration.
-
-### Terminal commands for end users
-
-- `npm run login`
-  Log into WeChat and save the bot account locally
-- `npm run accounts`
-  List saved local accounts
-- `npm run shared:start`
-  Default startup path. Starts the shared runtime bridge and the shared WeChat bridge
-- `npm run shared:open`
-  Default attach path. Opens the bound shared thread in your terminal
-- `npm run shared:status`
-  Check the shared runtime process, shared bridge, and `readyz`
-- `npm run doctor`
-  Inspect current config, channel/runtime boundaries, and thread status
-- `npm run help`
-  Show stable command entrypoints
-
-Here, `checkin` means the random wake-up mechanism, not a fixed periodic reminder.
-
-Switch the runtime with `DAWN_RUNTIME`. You do not need a different command set for Claude Code.
-
-`npm run start` and `npm run start:checkin` are still useful for minimal local debugging, but they are not the recommended way to observe or debug the real shared bridge workflow.
-
-### WeChat commands for end users
-
-- `/bind /absolute/path`
-  Bind the current chat to a project workspace
-- `/status`
-  Show current workspace, thread, model, and context state
-- `/new`
-  Move to a new thread draft
-- `/reread`
-  Reload the latest persona template and operations template into the current thread
-- `/compact`
-  Ask the current thread to compact its context. The bridge sends a start message and a completion message back to WeChat.
-- `/switch <threadId>`
-  Switch to a specific thread
-- `/stop`
-  Stop the current running turn
-- `/checkin <min>-<max>`
-  Update the proactive random check-in range for the current project
-- `/chunk <number>`
-  Adjust the minimum merge size for short WeChat reply chunks
-- `/yes`
-  Allow the current approval once
-- `/always`
-  Keep allowing the same kind of command inside the current project
-- `/no`
-  Reject the current approval
-- `/model`
-  Show current model
-- `/model <id>`
-  Switch model
-- `/star`
-  Show the GitHub star guide inside WeChat
-- `/help`
-  Show WeChat command help
-
-Plain text messages go directly to the bound thread. If nothing is bound yet, bind a workspace first:
-
-```text
-/bind /absolute/path
-```
-
-### Observe the same thread from WeChat and terminal
-
-If you want WeChat and your local terminal to stay attached to the same shared thread, use shared mode:
-
-Terminal 1:
-
-```bash
-npm run shared:start
-```
-
-Keep it running in the foreground.
-
-Terminal 2:
-
-```bash
-npm run shared:open
-```
-
-Useful diagnostics:
-
-- `npm run shared:status`
-
-Notes:
-
-- Shared mode is the default mode in this README
-- The same WeChat commands and day-to-day behavior apply under both Codex and Claude Code
-- If `DAWN_RUNTIME=claudecode`, the local Claude window works best as a listener for the shared thread
-- Do not let WeChat attach to a private spawned runtime if you expect terminal and WeChat to watch the same thread
-- Do not keep multiple `cyberboss` bridge processes alive at the same time
-- Do not put `npm run shared:start` in the background; it is the main shared bridge process
-
-<a id="data-dir"></a>
-## Local Data
-
-The default state directory is:
-
-```text
-${HOME}/.exclusive-dawn
-```
-
-Common contents:
-
-- `accounts/`
-  WeChat bot account data
-- `sessions.json`
-  workspace, thread, model, and approval state
-- `weixin-config.json`
-  WeChat reply chunk configuration
-- `sync-buffers/`
-  WeChat long-poll synchronization buffers
-- `inbox/`
-  saved incoming WeChat images and attachments
-- `stickers/`
-  sticker assets, including:
-  - `assets/`
-    saved sticker media, currently normalized to GIF
-  - `index.json`
-    sticker index mapping `stickerId -> { tags, desc }`
-  - `tags.json`
-    sticker tag catalog, editable by both the AI and the user
-- `weixin-instructions.md`
-  local persona file generated on first run
-- `reminder-queue.json`
-  reminder queue
-- `system-message-queue.json`
-  system / check-in queue
-- `deferred-system-replies.json`
-  replies waiting for the next usable WeChat context token
-- `checkin-config.json`
-  saved proactive check-in range
-- `timeline-screenshot-queue.json`
-  screenshot job queue
-- `diary/`
-  local diary files
-- `timeline/`
-  timeline data, site, and screenshots
-- `logs/`
-  shared bridge and shared runtime logs
-
-This is the runtime state directory, not your project workspace. The WeChat thread and the terminal thread should still be opened against your actual project directory.
-
-### Whereabouts Notes
-
-- Dawn already bundles `whereabouts-mcp` and can ingest phone location, battery, and trigger context directly.
-- To enable the built-in whereabouts server, configure at least:
-  - `DAWN_ENABLE_LOCATION_SERVER=true`
-  - `DAWN_LOCATION_TOKEN=<your_token>`
-  - `DAWN_LOCATION_HOME_CENTER=lat,lng`
-- Common optional variables:
-  - `DAWN_LOCATION_HOST`
-  - `DAWN_LOCATION_WORK_CENTER`
-  - `DAWN_LOCATION_KNOWN_PLACES`
-  - `DAWN_LOCATION_PLACE_RADIUS_METERS`
-  - `DAWN_LOCATION_BATTERY_HISTORY_LIMIT`
-- The built-in server listens on `http://0.0.0.0:4318` by default. The ingest endpoint is `POST /location/ingest`, and health checks use `GET /healthz`.
-- Whereabouts data is stored in `${HOME}/.exclusive-dawn/locations.json`, not in your project directory.
-
-### Sticker Notes
-
-- On the current WeChat bridge path, do not rely on animated playback for inbound or outbound stickers. A GIF may still show up as a static image in chat.
-- Because of that, saved stickers are currently normalized to GIF at intake so the asset format is already aligned if WeChat later opens a fuller sticker capability.
-- The tag catalog lives at `${HOME}/.exclusive-dawn/stickers/tags.json`. The AI reads from it, and users can edit it directly.
-- For now, sticker retrieval is tag-filtered only. There is no vector-database recall layer.
-
-<a id="agent-guide"></a>
-## Agent Guide
-
-Agent-facing Dawn capabilities are project-native structured tools.
-
-### Common project tools
-
-- `dawn_reminder_create`
-- `dawn_diary_append`
-- `dawn_timeline_write`
-- `dawn_timeline_build`
-- `dawn_timeline_serve`
-- `dawn_timeline_dev`
-- `dawn_timeline_screenshot`
-- `dawn_channel_send_file`
-- `whereabouts_current_stay`
-- `whereabouts_recent_stays`
-- `whereabouts_recent_moves`
-- `whereabouts_snapshot`
-- `whereabouts_summary`
-- `dawn_sticker_tags`
-- `dawn_sticker_pick`
-- `dawn_sticker_send`
-- `dawn_sticker_delete`
-- `dawn_sticker_save_from_inbox`
-- `dawn_sticker_update`
-- `dawn_system_send`
-
-### Agent conventions
-
-- Use Dawn project tools for diary, reminder, timeline, screenshot, and file-send operations
-- Prefer documented lifecycle entrypoints from this README, `--help`, and [docs/commands.md](./docs/commands.md) for human terminal usage
-- On first failure, report the concrete error before reading source code
-
-## Docs
-
-- [docs/commands.md](./docs/commands.md)
-
-<a id="faq"></a>
-## FAQ
-
-### Why not `npm install cyberboss`?
-
-Because the project is not published as an npm package yet. Clone the repo and run `npm install` inside it.
-
-### What exactly is `checkin`?
-
-`checkin` is the random wake-up mechanism. The system wakes the model at a random time and lets it decide whether to show up, stay silent, write data, or act.
-
-### Why set user name and gender before the first run?
-
-Because the first `cyberboss` command auto-generates `~/.exclusive-dawn/weixin-instructions.md`. Setting `DAWN_USER_NAME` and `DAWN_USER_GENDER` first avoids obviously wrong persona assumptions in that file.
-
-### Why not rewrite instructions aggressively from day one?
-
-If you want the strongest "cyberboss" effect, let the agent grow its pacing through real interaction first. If you over-script it too early, it starts sounding like a workflow script instead of an active companion.
-
-## License
-
-This project is built for local-first personal deployment. It continuously processes private chat content, reminders, life traces, and other highly sensitive personal context. I do not want that workflow to be repackaged into a closed cloud service that hides both the code path and the data path from the user.
-
-Because of that, this project is released under `AGPL-3.0-only`. If you modify it, extend it, and offer it to users over a network, you must provide the full corresponding source code under the AGPL terms.
+上游项目：[WenXiaoWendy/exclusive-dawn](https://github.com/WenXiaoWendy/exclusive-dawn)，AGPL-3.0
